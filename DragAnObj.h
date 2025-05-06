@@ -24,6 +24,7 @@ Message tokens: None.
 History:
   CJB: 30-Nov-15: Created this header file.
   CJB: 11-Dec-20: Remove redundant uses of the 'extern' keyword.
+  CJB: 07-May-25: Dogfooding the _Optional qualifier.
 */
 
 #ifndef DragAnObj_h
@@ -35,6 +36,10 @@ History:
 /* Acorn C/C++ library headers */
 #include "kernel.h"
 #include "wimp.h"
+
+#if !defined(USE_OPTIONAL) && !defined(_Optional)
+#define _Optional
+#endif
 
 /* Flags for use with the drag_an_object_start function */
 #define DragAnObject_HAlign_Left   (0u << 0)
@@ -52,11 +57,11 @@ History:
 #define DragAnObject_RenderAPCS    (1u << 16)
 #define DragAnObject_RenderSVC     (1u << 17)
 
-_kernel_oserror *drag_an_object_start(unsigned int /*flags*/,
-                                      int /*renderer*/,
-                                      const int */*renderer_args*/,
-                                      const BBox */*drag_box*/,
-                                      const BBox */*parent_box*/);
+_Optional _kernel_oserror *drag_an_object_start(unsigned int /*flags*/,
+                                                int /*renderer*/,
+                                                const int */*renderer_args*/,
+                                                const BBox */*drag_box*/,
+                                                const BBox */*parent_box*/);
    /*
     * Start dragging an object, using the given function or SWI number to
     * render a representation of the object into a masked sprite. 'renderer'
@@ -80,7 +85,7 @@ _kernel_oserror *drag_an_object_start(unsigned int /*flags*/,
     * Returns: a pointer to an OS error block, or else NULL for success.
     */
 
-_kernel_oserror *drag_an_object_stop(void);
+_Optional _kernel_oserror *drag_an_object_stop(void);
    /*
     * Stop dragging an object. Expected to be called when a Wimp_EUserDrag
     * event is delivered because the user has released all mouse buttons at

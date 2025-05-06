@@ -25,6 +25,7 @@ Message tokens: None.
 History:
   CJB: 28-Oct-18: Created this source file.
   CJB: 11-Dec-20: Remove redundant uses of the 'extern' keyword.
+  CJB: 07-May-25: Dogfooding the _Optional qualifier.
 */
 
 #ifndef Hourglass_h
@@ -33,8 +34,12 @@ History:
 /* Acorn C/C++ library headers */
 #include "kernel.h"
 
-_kernel_oserror *hourglass_on(void);
-_kernel_oserror *hourglass_off(void);
-_kernel_oserror *hourglass_percentage(int /*n*/);
+#if !defined(USE_OPTIONAL) && !defined(_Optional)
+#define _Optional
+#endif
+
+_Optional _kernel_oserror *hourglass_on(void);
+_Optional _kernel_oserror *hourglass_off(void);
+_Optional _kernel_oserror *hourglass_percentage(int /*n*/);
 
 #endif

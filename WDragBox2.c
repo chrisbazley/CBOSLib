@@ -19,6 +19,7 @@
 
 /* History:
   CJB: 30-Oct-21: Created this source file.
+  CJB: 07-May-25: Dogfooding the _Optional qualifier.
  */
 
 /* Acorn C/C++ library headers */
@@ -39,8 +40,8 @@ enum
 /* ----------------------------------------------------------------------- */
 /*                         Public functions                                */
 
-_kernel_oserror *wimp_drag_box2(WimpDragBox *const block,
-                               unsigned int const flags)
+_Optional _kernel_oserror *wimp_drag_box2(WimpDragBox *const block,
+                                          unsigned int const flags)
 {
   assert(block);
 
@@ -60,7 +61,7 @@ _kernel_oserror *wimp_drag_box2(WimpDragBox *const block,
    regs.r[2] = MagicWord;
    regs.r[3] = flags;
 
-  _kernel_oserror *const e = _kernel_swi(Wimp_DragBox, &regs, &regs);
+  _Optional _kernel_oserror *const e = _kernel_swi(Wimp_DragBox, &regs, &regs);
   if (e)
   {
     DEBUGF("WDragBox2: SWI returned error 0x%x '%s'\n", e->errnum, e->errmess);

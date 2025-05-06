@@ -21,10 +21,12 @@
   CJB: 28-Oct-18: Created this source file.
   CJB: 18-Jun-22: Assert that the value passed to hourglass_percentage()
                   is within a sensible range.
+  CJB: 07-May-25: Dogfooding the _Optional qualifier.
 */
 
 /* Acorn C/C++ library headers */
 #include "swis.h"
+#include "kernel.h"
 
 /* Local headers */
 #include "Internal/CBOSMisc.h"
@@ -33,7 +35,7 @@
 /* ----------------------------------------------------------------------- */
 /*                         Public functions                                */
 
-_kernel_oserror *hourglass_on(void)
+_Optional _kernel_oserror *hourglass_on(void)
 {
   DEBUGF("Hourglass on\n");
   return _swix(Hourglass_On, 0);
@@ -41,7 +43,7 @@ _kernel_oserror *hourglass_on(void)
 
 /* ----------------------------------------------------------------------- */
 
-_kernel_oserror *hourglass_off(void)
+_Optional _kernel_oserror *hourglass_off(void)
 {
   DEBUGF("Hourglass off\n");
   return _swix(Hourglass_Off, 0);
@@ -49,7 +51,7 @@ _kernel_oserror *hourglass_off(void)
 
 /* ----------------------------------------------------------------------- */
 
-_kernel_oserror *hourglass_percentage(const int n)
+_Optional _kernel_oserror *hourglass_percentage(const int n)
 {
   DEBUGF("Hourglass_Percentage %d\n", n);
   assert(n >= 0);

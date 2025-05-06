@@ -27,6 +27,7 @@ History:
                   os_file_read_catalogue_info_no_path.
   CJB: 29-May-16: Added a declaration of os_file_set_type.
   CJB: 11-Dec-20: Remove redundant uses of the 'extern' keyword.
+  CJB: 07-May-25: Dogfooding the _Optional qualifier.
 */
 
 #ifndef OSFile_h
@@ -40,6 +41,10 @@ History:
 
 /* Local headers */
 #include "OSDate.h"
+
+#if !defined(USE_OPTIONAL) && !defined(_Optional)
+#define _Optional
+#endif
 
 /* Constant for use with the os_file_create_dir function */
 enum
@@ -93,7 +98,7 @@ int decode_load_exec(int /*load*/, int /*exec*/, OS_DateAndTime * /*time*/ );
     *          so check the basic object type separately, if it matters.
     */
 
-_kernel_oserror *os_file_create_dir(const char * /*f*/, int /*n*/);
+_Optional _kernel_oserror *os_file_create_dir(const char * /*f*/, int /*n*/);
    /*
     * Creates a directory named 'f' with 'n' entries (or
     * OS_File_CreateDir_DefaultNoOfEntries). It is not an error if the directory
@@ -101,19 +106,19 @@ _kernel_oserror *os_file_create_dir(const char * /*f*/, int /*n*/);
     * Returns: a pointer to an OS error block, or else NULL for success.
     */
 
-_kernel_oserror *os_file_generate_error(const char */*f*/, int /*object_type*/);
+_Optional _kernel_oserror *os_file_generate_error(const char */*f*/, int /*object_type*/);
    /*
     * Creates an error message for an object of the given type named 'f'.
     * Returns: a pointer to an OS error block.
     */
 
-_kernel_oserror *os_file_read_cat_no_path(const char */*f*/, OS_File_CatalogueInfo */*catalogue_info*/);
+_Optional _kernel_oserror *os_file_read_cat_no_path(const char */*f*/, OS_File_CatalogueInfo */*catalogue_info*/);
    /*
     * Reads catalogue information for an object named 'f'.
     * Returns: a pointer to an OS error block, or else NULL for success.
     */
 
-_kernel_oserror *os_file_set_type(const char */*f*/, int /*type*/);
+_Optional _kernel_oserror *os_file_set_type(const char */*f*/, int /*type*/);
    /*
     * Sets the type of a specified file to indicate its contents (e.g. 0xfff
     * means text, whereas 0xfaf means HTML).

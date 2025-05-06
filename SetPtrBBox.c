@@ -18,6 +18,7 @@
  */
 
 /* History:
+  CJB: 07-May-25: Dogfooding the _Optional qualifier.
  */
 
 /* ISO library headers */
@@ -42,9 +43,9 @@ enum
 /* ----------------------------------------------------------------------- */
 /*                         Public functions                                */
 
-_kernel_oserror *os_word_set_pointer_bbox(const BBox *const bbox)
+_Optional _kernel_oserror *os_word_set_pointer_bbox(const BBox *const bbox)
 {
-  _kernel_oserror *e = NULL;
+  _Optional _kernel_oserror *e = NULL;
 
   assert(bbox != NULL);
   assert(bbox->xmin <= bbox->xmax);

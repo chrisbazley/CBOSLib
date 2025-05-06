@@ -20,6 +20,7 @@
 /* History:
   CJB: 08-Nov-14: Created this source file
   CJB: 18-Apr-15: Assertions are now provided by debug.h.
+  CJB: 07-May-25: Dogfooding the _Optional qualifier.
  */
 
 /* ISO library headers */
@@ -42,9 +43,9 @@ enum
 /* ----------------------------------------------------------------------- */
 /*                         Public functions                                */
 
-_kernel_oserror *os_file_create_dir(const char *f, int n)
+_Optional _kernel_oserror *os_file_create_dir(const char *f, int n)
 {
-  _kernel_oserror *e;
+  _Optional _kernel_oserror *e;
   _kernel_osfile_block kosfb;
 
   assert(f != NULL);

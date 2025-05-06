@@ -21,6 +21,7 @@
   CJB: 30-Oct-21: Created this source file.
   CJB: 01-Aug-22: Only assert that a non-null pointer was passed if
                   enabling scrolling.
+  CJB: 07-May-25: Dogfooding the _Optional qualifier.
  */
 
 /* Acorn C/C++ library headers */
@@ -35,9 +36,9 @@
 /* ----------------------------------------------------------------------- */
 /*                         Public functions                                */
 
-_kernel_oserror *wimp_auto_scroll(unsigned int const flags,
-                                 WimpAutoScrollBlock *const block,
-                                 unsigned int *const status)
+_Optional _kernel_oserror *wimp_auto_scroll(unsigned int const flags,
+                                            WimpAutoScrollBlock *const block,
+                                            _Optional unsigned int *const status)
 {
   if (flags & (Wimp_AutoScroll_Horizontal|Wimp_AutoScroll_Vertical))
   {
@@ -50,7 +51,7 @@ _kernel_oserror *wimp_auto_scroll(unsigned int const flags,
    regs.r[0] = flags;
    regs.r[1] = (int)block;
 
-  _kernel_oserror *const e = _kernel_swi(Wimp_AutoScroll, &regs, &regs);
+  _Optional _kernel_oserror *const e = _kernel_swi(Wimp_AutoScroll, &regs, &regs);
   if (e)
   {
     DEBUGF("WAutoScroll: SWI returned error 0x%x '%s'\n", e->errnum, e->errmess);

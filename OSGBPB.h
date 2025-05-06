@@ -24,6 +24,7 @@ Message tokens: None.
 History:
   CJB: 23-Nov-14: Created this header file.
   CJB: 11-Dec-20: Remove redundant uses of the 'extern' keyword.
+  CJB: 07-May-25: Dogfooding the _Optional qualifier.
 */
 
 #ifndef OSGBPB_h
@@ -37,6 +38,10 @@ History:
 
 /* Local headers */
 #include "OSFile.h"
+
+#if !defined(USE_OPTIONAL) && !defined(_Optional)
+#define _Optional
+#endif
 
 /* Constant for use with the os_gbpb_read_cat_no_path function */
 enum
@@ -55,7 +60,7 @@ typedef struct
 }
 OS_GBPB_CatalogueInfo;
 
-_kernel_oserror *os_gbpb_read_cat_no_path(const char */*f*/, void */*buffer*/, size_t /*buff_size*/, unsigned int */*n*/, int */*pos*/, const char */*pattern*/);
+_Optional _kernel_oserror *os_gbpb_read_cat_no_path(const char */*f*/, void */*buffer*/, size_t /*buff_size*/, unsigned int */*n*/, int */*pos*/, _Optional const char */*pattern*/);
    /*
     * Reads catalogue information for up to 'n' objects from the directory
     * named 'f', starting at 'pos' (or OS_GBPB_ReadCat_PositionStart for

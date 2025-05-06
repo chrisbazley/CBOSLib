@@ -31,6 +31,7 @@ History:
   CJB: 04-Oct-20: Made definition of Wimp_ReportError_UseCategory conditional
                   for compatibility with newer "wimp.h".
   CJB: 30-Oct-21: Added declarations of wimp_drag_box2 and wimp_auto_scroll.
+  CJB: 07-May-25: Dogfooding the _Optional qualifier.
 */
 
 #ifndef WimpExtra_h
@@ -40,6 +41,10 @@ History:
 #include "kernel.h"
 #include "wimp.h"
 
+
+#if !defined(USE_OPTIONAL) && !defined(_Optional)
+#define _Optional
+#endif
 
 /*-- wimp message numbers --*/
 
@@ -171,16 +176,16 @@ WimpAutoScrollBlock;
 #define Wimp_AutoScroll_CanScrollRight   (1u << 18)
 #define Wimp_AutoScroll_CanScrollUp      (1u << 19)
 
-_kernel_oserror *wimp_auto_scroll(unsigned int flags,
-                                 WimpAutoScrollBlock *block,
-                                 unsigned int *status);
+_Optional _kernel_oserror *wimp_auto_scroll(unsigned int flags,
+                                            WimpAutoScrollBlock *block,
+                                            _Optional unsigned int *status);
 
 /*-- flags for extended SWI Wimp_DragBox --*/
 
 #define Wimp_DragBox_FixToWorkArea       (1u << 0)
 #define Wimp_DragBox_ClipToWindow        (1u << 1)
 
-_kernel_oserror *wimp_drag_box2(WimpDragBox *block, unsigned int flags);
+_Optional _kernel_oserror *wimp_drag_box2(WimpDragBox *block, unsigned int flags);
 
 /*-- new flags for SWI Wimp_ReportError --*/
 

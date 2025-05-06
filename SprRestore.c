@@ -19,6 +19,7 @@
 
 /* History:
   CJB: 16-Mar-19: Created this source file.
+  CJB: 07-May-25: Dogfooding the _Optional qualifier.
 */
 
 /* Acorn C/C++ library headers */
@@ -29,7 +30,7 @@
 #include "Internal/CBOSMisc.h"
 #include "OSSpriteOp.h"
 
-_kernel_oserror *os_sprite_op_restore_output(
+_Optional _kernel_oserror *os_sprite_op_restore_output(
   const SpriteRestoreOutputBlock *const output)
 {
   assert(output != NULL);

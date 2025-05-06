@@ -24,6 +24,7 @@
   CJB: 18-Apr-16: Cast pointer parameters to void * to match %p.
   CJB: 28-Oct-20: Fixed null pointer instead of string passed to DEBUGF.
   CJB: 29-Aug-22: Use size_t rather than unsigned int for nparam.
+  CJB: 07-May-25: Dogfooding the _Optional qualifier.
 */
 
 /* ISO library headers */
@@ -49,7 +50,7 @@ enum
 /*                         Public functions                                */
 
 _kernel_oserror *messagetrans_error_lookup(
-                         MessagesFD            *mfd,
+                         _Optional MessagesFD  *mfd,
                          int                    errnum,
                          const char            *token,
                          size_t                 nparam,
@@ -71,17 +72,16 @@ _kernel_oserror *messagetrans_error_lookup(
    specify an output buffer and find the required size, but found that I
    didn't actually use it! */
 _kernel_oserror *messagetrans_error_vlookup(
-                         MessagesFD            *mfd,
+                         _Optional MessagesFD  *mfd,
                          int                    errnum,
                          const char            *token,
                          size_t                 nparam,
                          va_list                params)
 {
-  _kernel_oserror *e = NULL;
+  _Optional _kernel_oserror *e = NULL;
 
   assert(token != NULL);
   assert(nparam <= MaxParameters);
-  assert(nparam == 0 || params != NULL);
 
   DEBUGF("MTError: looking up error 0x%x '%s' in message file %p "
          "with %zu parameters\n", errnum, token, (void *)mfd, nparam);
@@ -93,7 +93,7 @@ _kernel_oserror *messagetrans_error_vlookup(
   _kernel_swi_regs regs = {
     .r = {
       (int)&temp,
-      (int)mfd
+      mfd ? (int)mfd : 0
     }
   };
 
@@ -116,5 +116,5 @@ _kernel_oserror *messagetrans_error_vlookup(
   assert(e != NULL);
   DEBUGF("MTError: SWI error 0x%x '%s' (2)\n", e->errnum, e->errmess);
 
-  return e;
+  return (_kernel_oserror *)e;
 }

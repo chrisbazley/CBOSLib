@@ -21,6 +21,7 @@
   CJB: 02-Oct-09: Created this source file.
   CJB: 31-Jan-16: Substituted _kernel_swi for _swix because it's easier to
                   intercept for stress testing.
+  CJB: 07-May-25: Dogfooding the _Optional qualifier.
 */
 
 /* ISO library headers */
@@ -38,9 +39,9 @@
 /* ----------------------------------------------------------------------- */
 /*                         Public functions                                */
 
-_kernel_oserror *colourtrans_set_gcol(unsigned int flags,
-                                      int          action,
-                                      PaletteEntry colour)
+_Optional _kernel_oserror *colourtrans_set_gcol(unsigned int flags,
+                                                int          action,
+                                                PaletteEntry colour)
 {
   DEBUGF("ClrTrans: Calling ColourTrans_SetGCOL with 0x%x,0x%x,0x%x\n",
          colour, flags, action);

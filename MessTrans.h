@@ -28,6 +28,7 @@ History:
                   messagetrans_open_file and messagetrans_close_file.
   CJB: 11-Dec-20: Remove redundant uses of the 'extern' keyword.
   CJB: 29-Aug-22: Use size_t rather than unsigned int for nparam.
+  CJB: 07-May-25: Dogfooding the _Optional qualifier.
 */
 
 #ifndef MessTrans_h
@@ -41,10 +42,14 @@ History:
 #include "kernel.h"
 #include "toolbox.h"
 
+#if !defined(USE_OPTIONAL) && !defined(_Optional)
+#define _Optional
+#endif
+
 /* Flags output by the messagetrans_file_info function */
 #define MessageTrans_FileInfo_HeldInMemory (1u << 0)
 
-_kernel_oserror *messagetrans_file_info(const char   */*filename*/,
+_Optional _kernel_oserror *messagetrans_file_info(const char   */*filename*/,
                                         unsigned int */*flags*/,
                                         size_t       */*buff_size*/);
    /*
@@ -57,9 +62,9 @@ _kernel_oserror *messagetrans_file_info(const char   */*filename*/,
     * Returns: a pointer to an OS error block, or else NULL for success.
     */
 
-_kernel_oserror *messagetrans_open_file(MessagesFD */*mfd*/,
-                                        const char */*filename*/,
-                                        void       */*buffer*/);
+_Optional _kernel_oserror *messagetrans_open_file(MessagesFD      */*mfd*/,
+                                                  const char      */*filename*/,
+                                                  _Optional void  */*buffer*/);
    /*
     * Opens the messages file specified by 'filename' for subsequent use by
     * messagetrans_lookup and similar functions. The messages file descriptor
@@ -70,19 +75,19 @@ _kernel_oserror *messagetrans_open_file(MessagesFD */*mfd*/,
     * Returns: a pointer to an OS error block, or else NULL for success.
     */
 
-_kernel_oserror *messagetrans_close_file(MessagesFD */*mfd*/);
+_Optional _kernel_oserror *messagetrans_close_file(MessagesFD */*mfd*/);
    /*
     * Closes the messages file associated with the messages file descriptor
     * that 'mfd' points to.
     */
 
-_kernel_oserror *messagetrans_lookup(MessagesFD   */*mfd*/,
-                                     const char   */*token*/,
-                                     char         */*buffer*/,
-                                     size_t        /*buff_size*/,
-                                     size_t       */*nbytes*/,
-                                     size_t        /*nparam*/,
-                                     ...);
+_Optional _kernel_oserror *messagetrans_lookup(_Optional MessagesFD   */*mfd*/,
+                                               const char             */*token*/,
+                                               _Optional char         */*buffer*/,
+                                               size_t                  /*buff_size*/,
+                                               _Optional size_t       */*nbytes*/,
+                                               size_t                  /*nparam*/,
+                                               ...);
    /*
     * Looks up the message associated with a given token: first in the messages
     * file specified by 'mfd' and then (as a fallback) in the global messages
@@ -99,13 +104,13 @@ _kernel_oserror *messagetrans_lookup(MessagesFD   */*mfd*/,
     * Returns: a pointer to an OS error block, or else NULL for success.
     */
 
-_kernel_oserror *messagetrans_vlookup(MessagesFD   */*mfd*/,
-                                      const char   */*token*/,
-                                      char         */*buffer*/,
-                                      size_t        /*buff_size*/,
-                                      size_t       */*nbytes*/,
-                                      size_t        /*nparam*/,
-                                      va_list       /*params*/);
+_Optional _kernel_oserror *messagetrans_vlookup(_Optional MessagesFD   */*mfd*/,
+                                                const char             */*token*/,
+                                                _Optional char         */*buffer*/,
+                                                size_t                  /*buff_size*/,
+                                                _Optional size_t       */*nbytes*/,
+                                                size_t                  /*nparam*/,
+                                                va_list                 /*params*/);
    /*
     * Equivalent to messagetrans_lookup except that the variable argument list
     * is replaced by 'params', which must have been initialised by the va_start
@@ -114,10 +119,10 @@ _kernel_oserror *messagetrans_vlookup(MessagesFD   */*mfd*/,
     */
 
 _kernel_oserror *messagetrans_error_lookup(
-                                MessagesFD   */*mfd*/,
-                                int           /*errnum*/,
-                                const char   */*token*/,
-                                size_t        /*nparam*/,
+                                _Optional MessagesFD */*mfd*/,
+                                int                   /*errnum*/,
+                                const char           */*token*/,
+                                size_t                /*nparam*/,
                                 ...);
    /*
     * Looks up the error message associated with a given token: first in the
@@ -132,7 +137,7 @@ _kernel_oserror *messagetrans_error_lookup(
     */
 
 _kernel_oserror *messagetrans_error_vlookup(
-                                MessagesFD            */*mfd*/,
+                                _Optional MessagesFD  */*mfd*/,
                                 int                    /*errnum*/,
                                 const char            */*token*/,
                                 size_t                 /*nparam*/,

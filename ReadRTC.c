@@ -26,6 +26,7 @@
                   const-qualified if CBLIB_OBSOLETE is defined.
   CJB: 18-Apr-15: Assertions are now provided by debug.h.
   CJB: 11-Dec-20: Remove redundant use of the 'extern' keyword.
+  CJB: 07-May-25: Dogfooding the _Optional qualifier.
  */
 
 /* ISO library headers */
@@ -48,9 +49,9 @@ enum
 /* ----------------------------------------------------------------------- */
 /*                         Public functions                                */
 
-_kernel_oserror *os_word_read_real_time(OS_DateAndTime *time)
+_Optional _kernel_oserror *os_word_read_real_time(OS_DateAndTime *time)
 {
-  _kernel_oserror *e = NULL;
+  _Optional _kernel_oserror *e = NULL;
 
   assert(time != NULL);
 

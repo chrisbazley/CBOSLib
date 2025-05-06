@@ -1,7 +1,7 @@
 # CBOSLib
 (C) 2018 Christopher Bazley
 
-Release 7 (17 Jun 2023)
+Release 8 (07 May 2025)
 
 Introduction
 ------------
@@ -143,6 +143,9 @@ Release 6 (01 Aug 2022)
 Release 7 (17 Jun 2023)
 - Use size_t rather than unsigned int for the number of substitution
   parameters passed to messagetrans functions.
+
+Release 8 (07 May 2025)
+- Dogfooding the _Optional qualifier.
 
 Contact details
 ---------------

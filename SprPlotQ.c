@@ -19,6 +19,7 @@
 
 /* History:
   CJB: 25-Jun-22: Created this source file.
+  CJB: 07-May-25: Dogfooding the _Optional qualifier.
 */
 
 /* Acorn C/C++ library headers */
@@ -29,10 +30,10 @@
 #include "OSSpriteOp.h"
 #include "Internal/CBOSMisc.h"
 
-_kernel_oserror *os_sprite_op_plot_trans_quad_sprite(
+_Optional _kernel_oserror *os_sprite_op_plot_trans_quad_sprite(
   SpriteAreaHeader *const area, const char *const name,
-  BBox const *const src, int const action,
-  TransformQuad const *const quad, void const *const colours)
+  _Optional BBox const *const src, int const action,
+  TransformQuad const *const quad, _Optional void const *const colours)
 {
   assert(area != NULL);
   assert(name != NULL);

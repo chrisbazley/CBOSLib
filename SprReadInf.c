@@ -19,6 +19,7 @@
 
 /* History:
   CJB: 30-Mar-19: Created this source file.
+  CJB: 07-May-25: Dogfooding the _Optional qualifier.
 */
 
 /* Acorn C/C++ library headers */
@@ -29,9 +30,9 @@
 #include "OSSpriteOp.h"
 #include "Internal/CBOSMisc.h"
 
-_kernel_oserror *os_sprite_op_read_sprite_info(SpriteAreaHeader *const area,
-  const char *const name, bool *const has_mask,
-  int *const width, int *const height, int *const mode)
+_Optional _kernel_oserror *os_sprite_op_read_sprite_info(SpriteAreaHeader *const area,
+  const char *const name, _Optional bool *const has_mask,
+  _Optional int *const width, _Optional int *const height, _Optional int *const mode)
 {
   assert(area != NULL);
   assert(name != NULL);
@@ -43,7 +44,7 @@ _kernel_oserror *os_sprite_op_read_sprite_info(SpriteAreaHeader *const area,
   regs.r[1] = (int)area;
   regs.r[2] = (int)name;
 
-  _kernel_oserror *const e = _kernel_swi(OS_SpriteOp, &regs, &regs);
+  _Optional _kernel_oserror *const e = _kernel_swi(OS_SpriteOp, &regs, &regs);
   if (e == NULL)
   {
     DEBUGF("SprReadInf: size %d,%d for mode %d, %s\n",

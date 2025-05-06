@@ -23,6 +23,7 @@
   CJB: 18-Apr-15: Assertions are now provided by debug.h.
   CJB: 21-Apr-16: Modified format strings to avoid GNU C compiler warnings.
   CJB: 25-Aug-20: Fixed null pointers instead of strings passed to DEBUGF.
+  CJB: 07-May-25: Dogfooding the _Optional qualifier.
  */
 
 /* ISO library headers */
@@ -45,13 +46,17 @@ enum
 /* ----------------------------------------------------------------------- */
 /*                         Public functions                                */
 
-_kernel_oserror *os_fscontrol_canonicalise(char *buffer, size_t buff_size, const char *pv, const char *ps, const char *f, size_t *nbytes)
+_Optional _kernel_oserror *os_fscontrol_canonicalise(_Optional char *buffer, size_t buff_size, _Optional const char *pv, _Optional const char *ps, const char *f, _Optional size_t *nbytes)
 {
-  _kernel_oserror *e;
+  _Optional _kernel_oserror *e;
   _kernel_swi_regs regs;
 
-  assert(buffer != NULL || buff_size == 0);
   assert(f != NULL);
+
+  if (!buffer)
+  {
+    buff_size = 0;
+  }
 
   DEBUGF("FSCanonic: about to canonicalise path '%s' with path variable '%s' "
          "or string '%s'\n", f, pv ? pv : "", ps ? ps : "");
@@ -59,7 +64,7 @@ _kernel_oserror *os_fscontrol_canonicalise(char *buffer, size_t buff_size, const
   DEBUGF("FSCanonic: output buffer is %p of size %zu\n", buffer, buff_size);
   regs.r[0] = FSControl_CanonicalisePath;
   regs.r[1] = (int)f;
-  regs.r[2] = (int)buffer;
+  regs.r[2] = buffer ? (int)buffer : 0;
   regs.r[3] = pv ? (int)pv : 0;
   regs.r[4] = ps ? (int)ps : 0;
   regs.r[5] = buff_size;

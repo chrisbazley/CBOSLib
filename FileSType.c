@@ -19,6 +19,7 @@
 
 /* History:
   CJB: 29-May-16: Created this source file based on SetFType.c.
+  CJB: 07-May-25: Dogfooding the _Optional qualifier.
  */
 
 /* ISO library headers */
@@ -40,9 +41,9 @@ enum
 /* ----------------------------------------------------------------------- */
 /*                         Public functions                                */
 
-_kernel_oserror *os_file_set_type(const char *f, int type)
+_Optional _kernel_oserror *os_file_set_type(const char *f, int type)
 {
-  _kernel_oserror *e = NULL;
+  _Optional _kernel_oserror *e = NULL;
   _kernel_osfile_block os_file;
 
   assert(f != NULL);

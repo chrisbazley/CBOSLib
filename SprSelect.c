@@ -20,6 +20,7 @@
 /* History:
   CJB: 21-Mar-19: Created this source file.
   CJB: 31-Mar-19: Corrected os_sprite_op_select output type.
+  CJB: 07-May-25: Dogfooding the _Optional qualifier.
 */
 
 /* Acorn C/C++ library headers */
@@ -30,8 +31,8 @@
 #include "OSSpriteOp.h"
 #include "Internal/CBOSMisc.h"
 
-_kernel_oserror *os_sprite_op_select(SpriteAreaHeader *const area,
-  const char *const name, SpriteHeader **const address)
+_Optional _kernel_oserror *os_sprite_op_select(SpriteAreaHeader *const area,
+  const char *const name, _Optional SpriteHeader **const address)
 {
   assert(area != NULL);
   assert(name != NULL);
@@ -43,7 +44,7 @@ _kernel_oserror *os_sprite_op_select(SpriteAreaHeader *const area,
   regs.r[1] = (int)area;
   regs.r[2] = (int)name;
 
-  _kernel_oserror *const e = _kernel_swi(OS_SpriteOp, &regs, &regs);
+  _Optional _kernel_oserror *const e = _kernel_swi(OS_SpriteOp, &regs, &regs);
   if (e == NULL && area) {
     *address = (SpriteHeader *)regs.r[2];
   } else {

@@ -19,6 +19,7 @@
 
 /* History:
   CJB: 30-Nov-15: Created this source file.
+  CJB: 07-May-25: Dogfooding the _Optional qualifier.
 */
 
 /* ISO library headers */
@@ -36,9 +37,9 @@
 /* ----------------------------------------------------------------------- */
 /*                         Public functions                                */
 
-_kernel_oserror *drag_an_object_start(unsigned int flags, int renderer, const int *renderer_args, const BBox *drag_box, const BBox *parent_box)
+_Optional _kernel_oserror *drag_an_object_start(unsigned int flags, int renderer, const int *renderer_args, const BBox *drag_box, const BBox *parent_box)
 {
-  _kernel_oserror *e = NULL;
+  _Optional _kernel_oserror *e = NULL;
   _kernel_swi_regs regs;
 
   assert(renderer_args != NULL);
@@ -71,9 +72,9 @@ _kernel_oserror *drag_an_object_start(unsigned int flags, int renderer, const in
   return e;
 }
 
-_kernel_oserror *drag_an_object_stop(void)
+_Optional _kernel_oserror *drag_an_object_stop(void)
 {
-  _kernel_oserror *e = NULL;
+  _Optional _kernel_oserror *e = NULL;
   _kernel_swi_regs regs;
 
   DEBUGF("DragAnObj: Calling DragAnObject_Stop\n");

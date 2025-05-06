@@ -26,6 +26,7 @@ History:
   CJB: 03-Oct-09: Created this header file.
   CJB: 22-Mar-19: Added the os_set_colour function.
   CJB: 11-Dec-20: Remove redundant uses of the 'extern' keyword.
+  CJB: 07-May-25: Dogfooding the _Optional qualifier.
 */
 
 #ifndef OSVDU_h
@@ -36,6 +37,10 @@ History:
 
 /* Acorn C/C++ library headers */
 #include "kernel.h"
+
+#if !defined(USE_OPTIONAL) && !defined(_Optional)
+#define _Optional
+#endif
 
 /* GCOL actions for use with the colourtrans_set_gcol function */
 enum
@@ -215,16 +220,16 @@ enum
 #define OS_SetColour_Background (1u << 4) /* otherwise foreground */
 #define OS_SetColour_UseECF     (1u << 5)
 
-_kernel_oserror *os_set_colour(unsigned int /*flags*/,
-                               int          /*action*/,
-                               int          /*colour*/);
+_Optional _kernel_oserror *os_set_colour(unsigned int /*flags*/,
+                                         int          /*action*/,
+                                         int          /*colour*/);
    /*
     * Sets the foreground or background graphics colour (based on the flags)
     * and plotting action (typically GCOLAction_Overwrite) used by os_plot.
     * Returns: a pointer to an OS error block, or else NULL for success.
     */
 
-_kernel_oserror *os_plot(int /*command*/, int /*x*/, int /*y*/);
+_Optional _kernel_oserror *os_plot(int /*command*/, int /*x*/, int /*y*/);
    /*
     * Multi-purpose function to plot lines and shapes, move the graphics
     * cursor, or copy/move rectangular blocks (depending on the specified
@@ -235,8 +240,8 @@ _kernel_oserror *os_plot(int /*command*/, int /*x*/, int /*y*/);
     * Returns: a pointer to an OS error block, or else NULL for success.
     */
 
-_kernel_oserror *os_read_vdu_variables(const VDUVar /*vars*/[],
-                                       int          /*values*/[]);
+_Optional _kernel_oserror *os_read_vdu_variables(const VDUVar /*vars*/[],
+                                                 int          /*values*/[]);
    /*
     * Reads information about the current state of the VDU drivers. The first
     * argument should point to an array of VDU or mode variable numbers to be
@@ -247,10 +252,10 @@ _kernel_oserror *os_read_vdu_variables(const VDUVar /*vars*/[],
     * Returns: a pointer to an OS error block, or else NULL for success.
     */
 
-_kernel_oserror *os_read_mode_variable(int      /*mode*/,
-                                       ModeVar  /*var*/,
-                                       int     */*value*/,
-                                       bool    */*valid*/);
+_Optional _kernel_oserror *os_read_mode_variable(int      /*mode*/,
+                                                 ModeVar  /*var*/,
+                                                 int     */*value*/,
+                                                 bool    */*valid*/);
    /*
     * Reads information about a given screen mode without having to change into
     * that mode. However, only one variable can be read at a time (unlike

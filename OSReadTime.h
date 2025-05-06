@@ -23,6 +23,7 @@ Message tokens: None.
 History:
   CJB: 14-Mar-19: Created this header file.
   CJB: 11-Dec-20: Remove redundant uses of the 'extern' keyword.
+  CJB: 07-May-25: Dogfooding the _Optional qualifier.
 */
 
 #ifndef OSReadTime_h
@@ -31,7 +32,11 @@ History:
 /* Acorn C/C++ library headers */
 #include "kernel.h"
 
-_kernel_oserror *os_read_monotonic_time(int *timer);
+#if !defined(USE_OPTIONAL) && !defined(_Optional)
+#define _Optional
+#endif
+
+_Optional _kernel_oserror *os_read_monotonic_time(int *timer);
    /*
     * Read the number of centiseconds since the last hard reset.
     * Returns: a pointer to an OS error block, or else NULL for success.

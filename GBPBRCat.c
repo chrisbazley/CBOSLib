@@ -21,6 +21,7 @@
   CJB: 23-Nov-14: Created this source file
   CJB: 18-Apr-15: Assertions are now provided by debug.h.
   CJB: 21-Apr-16: Modified format strings to avoid GNU C compiler warnings.
+  CJB: 07-May-25: Dogfooding the _Optional qualifier.
  */
 
 /* ISO library headers */
@@ -43,9 +44,9 @@ enum
 /* ----------------------------------------------------------------------- */
 /*                         Public functions                                */
 
-_kernel_oserror *os_gbpb_read_cat_no_path(const char *f, void *buffer, size_t buff_size, unsigned int *n, int *pos, const char *pattern)
+_Optional _kernel_oserror *os_gbpb_read_cat_no_path(const char *f, void *buffer, size_t buff_size, unsigned int *n, int *pos, _Optional const char *pattern)
 {
-  _kernel_oserror *e;
+  _Optional _kernel_oserror *e;
   _kernel_osgbpb_block gbpb_params;
 
   assert(f != NULL);
@@ -62,7 +63,7 @@ _kernel_oserror *os_gbpb_read_cat_no_path(const char *f, void *buffer, size_t bu
   gbpb_params.nbytes = *n;
   gbpb_params.fileptr = *pos;
   gbpb_params.buf_len = buff_size;
-  gbpb_params.wild_fld = (char *)pattern; /* may be null */
+  gbpb_params.wild_fld = pattern ? (char *)pattern : 0; /* may be null */
 
   /* Disgusting type-cast from string pointer to integer (thanks, Acorn).
      Note that _kernel_osgbpb even updates 'gbpb_params' on error. */

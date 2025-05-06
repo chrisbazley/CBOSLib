@@ -24,6 +24,7 @@ Message tokens: None.
 History:
   CJB: 02-Oct-09: Created this header file.
   CJB: 11-Dec-20: Remove redundant uses of the 'extern' keyword.
+  CJB: 07-May-25: Dogfooding the _Optional qualifier.
 */
 
 #ifndef ClrTrans_h
@@ -38,6 +39,10 @@ History:
 /* Local headers */
 #include "SprFormats.h"
 #include "PalEntry.h"
+
+#if !defined(USE_OPTIONAL) && !defined(_Optional)
+#define _Optional
+#endif
 
 /* Flags for use with the colourtrans_set_gcol function */
 #define ColourTrans_SetGCOL_Background (1u << 7) /* otherwise foreground */
@@ -122,7 +127,8 @@ typedef struct
 }
 ColourTransGenerateTableBlock;
 
-_kernel_oserror *colourtrans_set_gcol(unsigned int /*flags*/,
+_Optional _kernel_oserror *colourtrans_set_gcol(
+                                      unsigned int /*flags*/,
                                       int          /*action*/,
                                       PaletteEntry /*colour*/);
    /*
@@ -135,12 +141,12 @@ _kernel_oserror *colourtrans_set_gcol(unsigned int /*flags*/,
     * Returns: a pointer to an OS error block, or else NULL for success.
     */
 
-_kernel_oserror *colourtrans_read_palette(
+_Optional _kernel_oserror *colourtrans_read_palette(
                              unsigned int              /*flags*/,
                              const ColourTransContext */*source*/,
-                             PaletteEntry             */*buffer*/,
+                             _Optional PaletteEntry   */*buffer*/,
                              size_t                    /*buff_size*/,
-                             size_t                   */*nbytes*/);
+                             _Optional size_t         */*nbytes*/);
    /*
     * Reads a specified screen mode or sprite's palette into an array of
     * PaletteEntry elements provided by the caller. The output buffer size is
@@ -153,12 +159,12 @@ _kernel_oserror *colourtrans_read_palette(
     * Returns: a pointer to an OS error block, or else NULL for success.
     */
 
-_kernel_oserror *colourtrans_generate_table(
+_Optional _kernel_oserror *colourtrans_generate_table(
                              unsigned int                         /*flags*/,
                              const ColourTransGenerateTableBlock */*block*/,
-                             void                                */*buffer*/,
+                             _Optional void                      */*buffer*/,
                              size_t                               /*buff_size*/,
-                             size_t                              */*nbytes*/);
+                             _Optional size_t                    */*nbytes*/);
    /*
     * Generates a colour translation table for plotting sprites in screen modes
     * with a different palette and/or number of bits per pixel. The source

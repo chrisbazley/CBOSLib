@@ -19,6 +19,7 @@
 
 /* History:
   CJB: 14-Mar-19: Created this source file.
+  CJB: 07-May-25: Dogfooding the _Optional qualifier.
  */
 
 /* Acorn C/C++ library headers */
@@ -29,12 +30,12 @@
 #include "Internal/CBOSMisc.h"
 #include "OSReadTime.h"
 
-_kernel_oserror *os_read_monotonic_time(int *const time)
+_Optional _kernel_oserror *os_read_monotonic_time(int *const time)
 {
   assert(time != NULL);
 
   _kernel_swi_regs regs;
-  _kernel_oserror * const e = _kernel_swi(OS_ReadMonotonicTime,
+  _Optional _kernel_oserror * const e = _kernel_swi(OS_ReadMonotonicTime,
     &regs, &regs);
 
   if (e != NULL)

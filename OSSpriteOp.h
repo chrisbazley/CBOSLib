@@ -28,62 +28,68 @@ History:
                   os_sprite_op_flip_y, os_sprite_op_plot_sprite,
                   os_sprite_op_plot_trans_quad_sprite and
                   os_sprite_op_plot_trans_matrix_sprite.
-
+  CJB: 07-May-25: Dogfooding the _Optional qualifier.
 */
 #ifndef OSSpriteOp_h
 #define OSSpriteOp_h
 
 #include <stdbool.h>
+#include <stddef.h>
 #include "wimp.h"
 #include "kernel.h"
 #include "SprFormats.h"
 
-_kernel_oserror *os_sprite_op_initialise(SpriteAreaHeader *area);
+#if !defined(USE_OPTIONAL) && !defined(_Optional)
+#define _Optional
+#endif
 
-_kernel_oserror *os_sprite_op_load(SpriteAreaHeader *area,
+_Optional _kernel_oserror *os_sprite_op_initialise(SpriteAreaHeader *area);
+
+_Optional _kernel_oserror *os_sprite_op_load(SpriteAreaHeader *area,
   const char *file_name);
 
-_kernel_oserror *os_sprite_op_save(SpriteAreaHeader *area,
+_Optional _kernel_oserror *os_sprite_op_save(SpriteAreaHeader *area,
   const char *file_name);
 
-_kernel_oserror *os_sprite_op_read_header(SpriteAreaHeader *area,
+_Optional _kernel_oserror *os_sprite_op_read_header(SpriteAreaHeader *area,
   SpriteAreaHeader *hdr);
 
-_kernel_oserror *os_sprite_op_verify(SpriteAreaHeader *area);
+_Optional _kernel_oserror *os_sprite_op_verify(SpriteAreaHeader *area);
 
-_kernel_oserror *os_sprite_op_create_sprite(SpriteAreaHeader *area,
+_Optional _kernel_oserror *os_sprite_op_create_sprite(SpriteAreaHeader *area,
   const char *name, bool has_palette, int width, int height, int mode);
 
-_kernel_oserror *os_sprite_op_create_mask(SpriteAreaHeader *area,
+_Optional _kernel_oserror *os_sprite_op_create_mask(SpriteAreaHeader *area,
   const char *name);
 
-_kernel_oserror *os_sprite_op_read_sprite_info(SpriteAreaHeader *area,
-  const char *name, bool *has_mask, int *width, int *height, int *mode);
+_Optional _kernel_oserror *os_sprite_op_read_sprite_info(SpriteAreaHeader *area,
+  const char *name, _Optional bool *has_mask, _Optional int *width, _Optional int *height,
+  _Optional int *mode);
 
-_kernel_oserror *os_sprite_op_rename(SpriteAreaHeader *area,
+_Optional _kernel_oserror *os_sprite_op_rename(SpriteAreaHeader *area,
   const char *old_name, const char *new_name);
 
-_kernel_oserror *os_sprite_op_delete(SpriteAreaHeader *area,
+_Optional _kernel_oserror *os_sprite_op_delete(SpriteAreaHeader *area,
   const char *name);
 
-_kernel_oserror *os_sprite_op_set_pointer(SpriteAreaHeader *area,
-  const char *name, unsigned int flags, int x, int y, ScaleFactors const *scale,
-  void const *colours);
+_Optional _kernel_oserror *os_sprite_op_set_pointer(SpriteAreaHeader *area,
+  const char *name, unsigned int flags, int x, int y,
+  _Optional ScaleFactors const *scale, _Optional void const *colours);
 
-_kernel_oserror *os_sprite_op_plot_sprite(SpriteAreaHeader *area,
+_Optional _kernel_oserror *os_sprite_op_plot_sprite(SpriteAreaHeader *area,
   const char *name, int x, int y, int action);
 
-_kernel_oserror *os_sprite_op_plot_scaled_sprite(SpriteAreaHeader *area,
-  const char *name, int x, int y, int action, ScaleFactors const *scale,
-  void const *colours);
+_Optional _kernel_oserror *os_sprite_op_plot_scaled_sprite(SpriteAreaHeader *area,
+  const char *name, int x, int y, int action,
+  _Optional ScaleFactors const *scale, _Optional void const *colours);
 
-_kernel_oserror *os_sprite_op_plot_trans_quad_sprite(SpriteAreaHeader *area,
-  const char *name, BBox const *src, int action, TransformQuad const *quad,
-  void const *colours);
+_Optional _kernel_oserror *os_sprite_op_plot_trans_quad_sprite(SpriteAreaHeader *area,
+  const char *name, _Optional BBox const *src, int action, TransformQuad const *quad,
+  _Optional void const *colours);
 
-_kernel_oserror *os_sprite_op_plot_trans_matrix_sprite(SpriteAreaHeader *area,
-  const char *name, BBox const *src, int action, TransformMatrix const *matrix,
-  void const *colours);
+_Optional _kernel_oserror *os_sprite_op_plot_trans_matrix_sprite(SpriteAreaHeader *area,
+  const char *name, _Optional BBox const *src, int action, TransformMatrix const *matrix,
+  _Optional void const *colours);
 
 typedef struct {
   int reason;
@@ -92,24 +98,24 @@ typedef struct {
   void *buffer;
 } SpriteRestoreOutputBlock;
 
-_kernel_oserror *os_sprite_op_output_to_sprite(SpriteAreaHeader *area,
-  const char *name, void *buffer, size_t buff_size, size_t *nbytes,
-  SpriteRestoreOutputBlock *restore);
+_Optional _kernel_oserror *os_sprite_op_output_to_sprite(SpriteAreaHeader *area,
+  _Optional const char *name, _Optional void *buffer, size_t buff_size,
+  _Optional size_t *nbytes, _Optional SpriteRestoreOutputBlock *restore);
 
-_kernel_oserror *os_sprite_op_output_to_mask(SpriteAreaHeader *area,
-  const char *name, void *buffer, size_t buff_size, size_t *nbytes,
-  SpriteRestoreOutputBlock *restore);
+_Optional _kernel_oserror *os_sprite_op_output_to_mask(SpriteAreaHeader *area,
+  _Optional const char *name, _Optional void *buffer, size_t buff_size,
+  _Optional size_t *nbytes, _Optional SpriteRestoreOutputBlock *restore);
 
-_kernel_oserror *os_sprite_op_restore_output(
+_Optional _kernel_oserror *os_sprite_op_restore_output(
   const SpriteRestoreOutputBlock *output);
 
-_kernel_oserror *os_sprite_op_select(SpriteAreaHeader *area,
-  const char *name, SpriteHeader **address);
+_Optional _kernel_oserror *os_sprite_op_select(SpriteAreaHeader *area,
+  const char *name, _Optional SpriteHeader **address);
 
-_kernel_oserror *os_sprite_op_flip_x(SpriteAreaHeader *area,
+_Optional _kernel_oserror *os_sprite_op_flip_x(SpriteAreaHeader *area,
   const char *name);
 
-_kernel_oserror *os_sprite_op_flip_y(SpriteAreaHeader *area,
+_Optional _kernel_oserror *os_sprite_op_flip_y(SpriteAreaHeader *area,
   const char *name);
 
 #endif /* OSSpriteOp_h */

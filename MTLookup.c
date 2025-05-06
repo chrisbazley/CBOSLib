@@ -28,6 +28,7 @@
                   required to store the full output (as documented) instead
                   of 'size of result before terminator' (like the SWI).
   CJB: 29-Aug-22: Use size_t rather than unsigned int for nparam.
+  CJB: 07-May-25: Dogfooding the _Optional qualifier.
 */
 
 /* ISO library headers */
@@ -51,15 +52,15 @@ enum
 /* ----------------------------------------------------------------------- */
 /*                         Public functions                                */
 
-_kernel_oserror *messagetrans_lookup(MessagesFD   *mfd,
-                                     const char   *token,
-                                     char         *buffer,
-                                     size_t        buff_size,
-                                     size_t       *nbytes,
-                                     size_t        nparam,
-                                     ...)
+_Optional _kernel_oserror *messagetrans_lookup(_Optional MessagesFD   *mfd,
+                                               const char             *token,
+                                               _Optional char         *buffer,
+                                               size_t                  buff_size,
+                                               _Optional size_t       *nbytes,
+                                               size_t                  nparam,
+                                               ...)
 {
-  _kernel_oserror *e;
+  _Optional _kernel_oserror *e;
   va_list ap;
 
   va_start(ap, nparam); /* make ap point to first unnamed arg */
@@ -71,20 +72,23 @@ _kernel_oserror *messagetrans_lookup(MessagesFD   *mfd,
 
 /* ----------------------------------------------------------------------- */
 
-_kernel_oserror *messagetrans_vlookup(MessagesFD   *mfd,
-                                      const char   *token,
-                                      char         *buffer,
-                                      size_t        buff_size,
-                                      size_t       *nbytes,
-                                      size_t        nparam,
-                                      va_list       params)
+_Optional _kernel_oserror *messagetrans_vlookup(_Optional MessagesFD   *mfd,
+                                                const char              *token,
+                                                _Optional char          *buffer,
+                                                size_t                   buff_size,
+                                                _Optional size_t        *nbytes,
+                                                size_t                   nparam,
+                                                va_list                  params)
 {
-  _kernel_oserror *e = NULL;
+  _Optional _kernel_oserror *e = NULL;
 
   assert(token != NULL);
-  assert(buff_size == 0 || buffer != NULL);
   assert(nparam <= MaxParameters);
-  assert(nparam == 0 || params != NULL);
+
+  if (!buffer)
+  {
+    buff_size = 0;
+  }
 
   DEBUGF("MTLookup: looking up token '%s' in message file %p "
          "with %zu parameters\n", token, (void *)mfd, nparam);
@@ -94,7 +98,7 @@ _kernel_oserror *messagetrans_vlookup(MessagesFD   *mfd,
 
   _kernel_swi_regs regs = {
     .r = {
-      (int)mfd
+      mfd ? (int)mfd : 0
     }
   };
 
@@ -147,7 +151,7 @@ _kernel_oserror *messagetrans_vlookup(MessagesFD   *mfd,
     /* Generate the output string.
        R0 and R4-R7 should have been preserved by the earlier SWI. */
     regs.r[1] = (int)token;
-    regs.r[2] = (int)buffer;
+    regs.r[2] = buffer ? (int)buffer : 0;
     regs.r[3] = buff_size;
     e = _kernel_swi(MessageTrans_Lookup, &regs, &regs);
     if (e == NULL)

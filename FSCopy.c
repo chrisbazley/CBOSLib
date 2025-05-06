@@ -19,6 +19,7 @@
 
 /* History:
   CJB: 14-Mar-19: Created this source file
+  CJB: 07-May-25: Dogfooding the _Optional qualifier.
  */
 
 /* ISO library headers */
@@ -38,7 +39,7 @@ enum
   FSControl_CopyObjects = 26
 };
 
-_kernel_oserror *os_fscontrol_copy(const char *src,
+_Optional _kernel_oserror *os_fscontrol_copy(const char *src,
   const char *dst, unsigned int flags)
 {
   assert(src != NULL);
@@ -52,7 +53,7 @@ _kernel_oserror *os_fscontrol_copy(const char *src,
   regs.r[1] = (int)src;
   regs.r[2] = (int)dst;
   regs.r[3] = (int)flags;
-  _kernel_oserror *const e = _kernel_swi(OS_FSControl, &regs, &regs);
+  _Optional _kernel_oserror *const e = _kernel_swi(OS_FSControl, &regs, &regs);
 
   if (e != NULL)
   {

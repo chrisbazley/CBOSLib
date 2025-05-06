@@ -20,6 +20,7 @@
 /* History:
   CJB: 23-Nov-14: Created this source file
   CJB: 18-Apr-15: Assertions are now provided by debug.h.
+  CJB: 07-May-25: Dogfooding the _Optional qualifier.
  */
 
 /* ISO library headers */
@@ -42,9 +43,9 @@ enum
 /* ----------------------------------------------------------------------- */
 /*                         Public functions                                */
 
-_kernel_oserror *os_file_read_cat_no_path(const char *f, OS_File_CatalogueInfo *catalogue_entry)
+_Optional _kernel_oserror *os_file_read_cat_no_path(const char *f, OS_File_CatalogueInfo *catalogue_entry)
 {
-  _kernel_oserror *e;
+  _Optional _kernel_oserror *e;
   _kernel_osfile_block kosfb;
 
   assert(f != NULL);

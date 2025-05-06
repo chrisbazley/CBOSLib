@@ -22,6 +22,7 @@
   CJB: 18-Apr-15: Assertions are now provided by debug.h.
   CJB: 31-Jan-16: Substituted _kernel_swi for _swix because it's easier to
                   intercept for stress testing.
+  CJB: 07-May-25: Dogfooding the _Optional qualifier.
 */
 
 /* ISO library headers */
@@ -38,9 +39,9 @@
 /* ----------------------------------------------------------------------- */
 /*                         Public functions                                */
 
-_kernel_oserror *os_read_vdu_variables(const VDUVar vars[], int values[])
+_Optional _kernel_oserror *os_read_vdu_variables(const VDUVar vars[], int values[])
 {
-  _kernel_oserror *e = NULL;
+  _Optional _kernel_oserror *e = NULL;
   _kernel_swi_regs regs;
 
   assert(vars != NULL);

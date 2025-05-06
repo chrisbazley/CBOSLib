@@ -19,6 +19,7 @@
 
 /* History:
   CJB: 05-May-19: Added an alternative definition of DEBUG_VERBOSEF.
+  CJB: 07-May-25: Dogfooding the _Optional qualifier.
 */
 
 #ifndef CBOSMisc_h
@@ -58,5 +59,9 @@
   strncpy((string_1), (string_2), sizeof(string_1) - 1); \
   string_1[sizeof(string_1) - 1]='\0'; \
 } while (0)
+
+#ifdef USE_OPTIONAL
+#include "Optional.h"
+#endif
 
 #endif /* CBOSMisc_h */

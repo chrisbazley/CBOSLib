@@ -21,6 +21,7 @@
   CJB: 16-Mar-19: Created this source file.
   CJB: 29-Jul-22: Use initializer on _kernel_swi_regs declaration.
                   Allow 'const' scale factors and colour translation table.
+  CJB: 07-May-25: Dogfooding the _Optional qualifier.
 */
 
 /* Acorn C/C++ library headers */
@@ -31,10 +32,10 @@
 #include "OSSpriteOp.h"
 #include "Internal/CBOSMisc.h"
 
-_kernel_oserror *os_sprite_op_set_pointer(SpriteAreaHeader *const area,
+_Optional _kernel_oserror *os_sprite_op_set_pointer(SpriteAreaHeader *const area,
   const char *const name, unsigned int const flags,
   int const x, int const y,
-  ScaleFactors const *const scale, void const *const colours)
+  _Optional ScaleFactors const *const scale, _Optional void const *const colours)
 {
   assert(area != NULL);
   assert(name != NULL);

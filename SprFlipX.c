@@ -19,6 +19,7 @@
 
 /* History:
   CJB: 26-Jun-22: Created this source file.
+  CJB: 07-May-25: Dogfooding the _Optional qualifier.
 */
 
 /* Acorn C/C++ library headers */
@@ -29,7 +30,7 @@
 #include "OSSpriteOp.h"
 #include "Internal/CBOSMisc.h"
 
-_kernel_oserror *os_sprite_op_flip_x(
+_Optional _kernel_oserror *os_sprite_op_flip_x(
   SpriteAreaHeader *const area, const char *const name)
 {
   assert(area != NULL);

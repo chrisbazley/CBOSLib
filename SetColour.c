@@ -19,6 +19,7 @@
 
 /* History:
   CJB: 22-Mar-19: Created this source file.
+  CJB: 07-May-25: Dogfooding the _Optional qualifier.
 */
 
 /* Acorn C/C++ library headers */
@@ -29,7 +30,7 @@
 #include "OSVDU.h"
 #include "Internal/CBOSMisc.h"
 
-_kernel_oserror *os_set_colour(unsigned int const flags, int const action,
+_Optional _kernel_oserror *os_set_colour(unsigned int const flags, int const action,
   int const colour)
 {
   DEBUG_VERBOSEF("SetColour: Calling OS_SetColour with 0x%x,0x%x,0x%x\n",

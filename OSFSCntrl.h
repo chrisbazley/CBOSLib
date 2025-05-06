@@ -24,6 +24,7 @@ History:
   CJB: 12-Oct-09: Created this header file.
   CJB: 14-Mar-19: Added the os_fscontrol_copy function.
   CJB: 11-Dec-20: Remove redundant uses of the 'extern' keyword.
+  CJB: 07-May-25: Dogfooding the _Optional qualifier.
 */
 
 #ifndef OSFSCntrl_h
@@ -35,9 +36,14 @@ History:
 /* Acorn C/C++ library headers */
 #include "kernel.h"
 
-_kernel_oserror *os_fscontrol_canonicalise(char * /*buffer*/,
-  size_t /*buff_size*/, const char * /*pv*/, const char * /*ps*/,
-  const char * /*f*/, size_t * /*nbytes*/);
+#if !defined(USE_OPTIONAL) && !defined(_Optional)
+#define _Optional
+#endif
+
+_Optional _kernel_oserror *os_fscontrol_canonicalise(
+  _Optional char * /*buffer*/, size_t /*buff_size*/,
+  _Optional const char * /*pv*/, _Optional const char * /*ps*/,
+  const char * /*f*/, _Optional size_t * /*nbytes*/);
    /*
     * Converts 'f' (which may contain wildcards or references to environment
     * variables) into a canonical file path from the root directory of a filing
@@ -68,7 +74,7 @@ _kernel_oserror *os_fscontrol_canonicalise(char * /*buffer*/,
 #define OS_FSControl_Newer     (1u << 12)
 #define OS_FSControl_Look      (1u << 14)
 
-_kernel_oserror *os_fscontrol_copy(const char * /*src*/,
+_Optional _kernel_oserror *os_fscontrol_copy(const char * /*src*/,
   const char * /*dst*/, unsigned int /*flags*/);
    /*
     * Copy files conforming to a given wildcarded filename to a destination

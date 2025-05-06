@@ -20,6 +20,7 @@
 /* History:
   CJB: 16-Mar-19: Created this source file.
   CJB: 25-Apr-21: Correct text of debugging output from os_sprite_op_save().
+  CJB: 07-May-25: Dogfooding the _Optional qualifier.
 */
 
 /* Acorn C/C++ library headers */
@@ -30,7 +31,7 @@
 #include "OSSpriteOp.h"
 #include "Internal/CBOSMisc.h"
 
-_kernel_oserror *os_sprite_op_save(SpriteAreaHeader *const area,
+_Optional _kernel_oserror *os_sprite_op_save(SpriteAreaHeader *const area,
   const char *const file_name)
 {
   assert(area != NULL);

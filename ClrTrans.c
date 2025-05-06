@@ -23,6 +23,7 @@
   CJB: 18-Apr-15: Assertions are now provided by debug.h.
   CJB: 21-Apr-16: Modified format strings to avoid GNU C compiler warnings.
   CJB: 17-Mar-19: Reduced the scope of buff_req.
+  CJB: 07-May-25: Dogfooding the _Optional qualifier.
 */
 
 /* ISO library headers */
@@ -54,22 +55,27 @@ static void assign_regs(int regs[], const ColourTransContext *context);
 /* ----------------------------------------------------------------------- */
 /*                         Public functions                                */
 
-_kernel_oserror *colourtrans_read_palette(unsigned int              flags,
+_Optional _kernel_oserror *colourtrans_read_palette(
+                                          unsigned int              flags,
                                           const ColourTransContext *source,
-                                          PaletteEntry             *buffer,
+                                          _Optional PaletteEntry   *buffer,
                                           size_t                    buff_size,
-                                          size_t                   *nbytes)
+                                          _Optional size_t         *nbytes)
 {
-  _kernel_oserror *e = NULL;
+  _Optional _kernel_oserror *e = NULL;
   _kernel_swi_regs regs;
 
   assert(source != NULL);
-  assert(buffer != NULL || buff_size == 0);
+
+  if (!buffer)
+  {
+    buff_size = 0;
+  }
 
   assign_regs(&regs.r[0], source);
 
   /* Find buffer size and/or read palette into caller's buffer */
-  regs.r[2] = (int)buffer;
+  regs.r[2] = buffer ? (int)buffer : 0;
   regs.r[3] = buff_size;
   regs.r[4] = flags;
   DEBUGF("ClrTrans: Calling ColourTrans_ReadPalette with "
@@ -105,14 +111,14 @@ _kernel_oserror *colourtrans_read_palette(unsigned int              flags,
 
 /* ----------------------------------------------------------------------- */
 
-_kernel_oserror *colourtrans_generate_table(
+_Optional _kernel_oserror *colourtrans_generate_table(
                                unsigned int                         flags,
                                const ColourTransGenerateTableBlock *block,
-                               void                                *buffer,
+                               _Optional void                      *buffer,
                                size_t                               buff_size,
-                               size_t                              *nbytes)
+                               _Optional size_t                    *nbytes)
 {
-  _kernel_oserror *e = NULL;
+  _Optional _kernel_oserror *e = NULL;
   _kernel_swi_regs regs;
 
   assert(block != NULL);

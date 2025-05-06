@@ -24,6 +24,7 @@
   CJB: 05-May-19: Only emit debugging output when verbose.
   CJB: 01-Jun-21: Assert that the coordinates passed to os_plot() are within
                   a sensible range.
+  CJB: 07-May-25: Dogfooding the _Optional qualifier.
 */
 
 #include <limits.h>
@@ -36,7 +37,7 @@
 #include "OSVDU.h"
 #include "Internal/CBOSMisc.h"
 
-_kernel_oserror *os_plot(int command, int x, int y)
+_Optional _kernel_oserror *os_plot(int command, int x, int y)
 {
   /* Well, what did you expect? */
   DEBUG_VERBOSEF("OSPlot: Calling OS_Plot with %d,%d,%d\n", command, x, y);

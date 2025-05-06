@@ -19,6 +19,7 @@
 
 /* History:
   CJB: 16-Mar-19: Created this source file.
+  CJB: 07-May-25: Dogfooding the _Optional qualifier.
 */
 
 /* Acorn C/C++ library headers */
@@ -35,13 +36,18 @@ enum
   DUMMY_ERRNO = 255
 };
 
-static _kernel_oserror *switch_output_common(SpriteAreaHeader *const area,
-  const char *const name, void *const buffer, size_t const buff_size,
-  size_t *const nbytes, SpriteRestoreOutputBlock *const output,
+static _Optional _kernel_oserror *switch_output_common(SpriteAreaHeader *const area,
+  _Optional const char *const name, _Optional void *const buffer, size_t buff_size,
+  _Optional size_t *const nbytes, _Optional SpriteRestoreOutputBlock *const output,
   int const reason)
 {
   assert(area != NULL);
-  assert(buffer != NULL || buff_size == 0);
+
+  if (!buffer)
+  {
+    buff_size = 0;
+  }
+
   DEBUGF("SprOutput: Switching output to %s '%s' in area %p "
          "with save area %p of size %zu (output size to %p)\n",
          reason == SPRITEOP_SWITCHOUTPUT_SPRITE ? "sprite" : "mask",
@@ -54,7 +60,7 @@ static _kernel_oserror *switch_output_common(SpriteAreaHeader *const area,
   regs.r[1] = (int)area;
   regs.r[2] = name ? (int)name : 0;
 
-  _kernel_oserror *e = _kernel_swi(OS_SpriteOp, &regs, &regs);
+  _Optional _kernel_oserror *e = _kernel_swi(OS_SpriteOp, &regs, &regs);
 
   if (e == NULL)
   {
@@ -115,17 +121,17 @@ static _kernel_oserror *switch_output_common(SpriteAreaHeader *const area,
   return e;
 }
 
-_kernel_oserror *os_sprite_op_output_to_mask(SpriteAreaHeader *const area,
-  const char *const name, void *const buffer, size_t const buff_size,
-  size_t *const nbytes, SpriteRestoreOutputBlock *const output)
+_Optional _kernel_oserror *os_sprite_op_output_to_mask(SpriteAreaHeader *const area,
+  _Optional const char *const name, _Optional void *const buffer, size_t const buff_size,
+  _Optional size_t *const nbytes, _Optional SpriteRestoreOutputBlock *const output)
 {
   return switch_output_common(area, name, buffer, buff_size, nbytes,
                               output, SPRITEOP_SWITCHOUTPUT_MASK);
 }
 
-_kernel_oserror *os_sprite_op_output_to_sprite(SpriteAreaHeader *const area,
-  const char *const name, void *const buffer, size_t const buff_size,
-  size_t *const nbytes, SpriteRestoreOutputBlock *const output)
+_Optional _kernel_oserror *os_sprite_op_output_to_sprite(SpriteAreaHeader *const area,
+  _Optional const char *const name, _Optional void *const buffer, size_t const buff_size,
+  _Optional size_t *const nbytes, _Optional SpriteRestoreOutputBlock *const output)
 {
   return switch_output_common(area, name, buffer, buff_size, nbytes,
                               output, SPRITEOP_SWITCHOUTPUT_SPRITE);

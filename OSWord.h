@@ -24,6 +24,7 @@ History:
   CJB: 29-Oct-18: Created this header file.
   CJB: 22-Apr-19: Added declaration of os_word_set_pointer_bbox.
   CJB: 11-Dec-20: Remove redundant uses of the 'extern' keyword.
+  CJB: 07-May-25: Dogfooding the _Optional qualifier.
 */
 
 #ifndef OSWord_h
@@ -40,7 +41,11 @@ History:
 /* Local headers */
 #include "OSDate.h"
 
-_kernel_oserror *os_word_read_real_time(OS_DateAndTime * /*time*/);
+#if !defined(USE_OPTIONAL) && !defined(_Optional)
+#define _Optional
+#endif
+
+_Optional _kernel_oserror *os_word_read_real_time(OS_DateAndTime * /*time*/);
    /*
     * Reads the current date and time from the CMOS clock in 5 byte UTC time
     * format. On entry 'utc' must point to an object in which to store the date
@@ -49,7 +54,7 @@ _kernel_oserror *os_word_read_real_time(OS_DateAndTime * /*time*/);
     *          error occured then the current time will have been output.
     */
 
-_kernel_oserror *os_word_set_pointer_bbox(const BBox * /*bbox*/);
+_Optional _kernel_oserror *os_word_set_pointer_bbox(const BBox * /*bbox*/);
    /*
     * Sets the mouse pointer bounding box in OS units relative to the
     * graphics coordinate origin.
