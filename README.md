@@ -1,7 +1,7 @@
 # CBOSLib
 (C) 2018 Christopher Bazley
 
-Release 8 (07 May 2025)
+Release 9 (10 May 2025)
 
 Introduction
 ------------
@@ -146,6 +146,10 @@ Release 7 (17 Jun 2023)
 
 Release 8 (07 May 2025)
 - Dogfooding the _Optional qualifier.
+
+Release 9 (10 May 2025)
+- os_file_generate_error shouldn't return pointer to optional.
+- Make the output of decode_load_exec optional.
 
 Contact details
 ---------------

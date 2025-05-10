@@ -19,6 +19,7 @@
 
 /* History:
   CJB: 08-Apr-12: Created this source file.
+  CJB: 10-May-25: Make the output of decode_load_exec optional.
  */
 
 /* ISO library headers */
@@ -39,7 +40,7 @@ enum
   LoadAddressStampShift   = 0
 };
 
-int decode_load_exec(int load, int exec, OS_DateAndTime *time)
+int decode_load_exec(int load, int exec, _Optional OS_DateAndTime *time)
 {
   int file_type;
   const int has_type = (load >> LoadAddressHasTypeShift) &

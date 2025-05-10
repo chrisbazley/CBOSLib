@@ -28,6 +28,8 @@ History:
   CJB: 29-May-16: Added a declaration of os_file_set_type.
   CJB: 11-Dec-20: Remove redundant uses of the 'extern' keyword.
   CJB: 07-May-25: Dogfooding the _Optional qualifier.
+  CJB: 10-May-25: Make the output of decode_load_exec optional.
+                  os_file_generate_error shouldn't return pointer to optional.
 */
 
 #ifndef OSFile_h
@@ -85,7 +87,7 @@ typedef struct
 }
 OS_File_CatalogueInfo;
 
-int decode_load_exec(int /*load*/, int /*exec*/, OS_DateAndTime * /*time*/ );
+int decode_load_exec(int /*load*/, int /*exec*/, _Optional OS_DateAndTime * /*time*/ );
    /*
     * Decodes an filing system object's load and execution addresses (e.g. from
     * a _kernel_osfile_block) to determine whether it has a date stamp and file
@@ -106,7 +108,7 @@ _Optional _kernel_oserror *os_file_create_dir(const char * /*f*/, int /*n*/);
     * Returns: a pointer to an OS error block, or else NULL for success.
     */
 
-_Optional _kernel_oserror *os_file_generate_error(const char */*f*/, int /*object_type*/);
+_kernel_oserror *os_file_generate_error(const char */*f*/, int /*object_type*/);
    /*
     * Creates an error message for an object of the given type named 'f'.
     * Returns: a pointer to an OS error block.

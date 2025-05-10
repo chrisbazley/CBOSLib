@@ -23,6 +23,7 @@
   CJB: 03-Apr-16: The return value of _kernel_osfile is now explicitly
                   ignored to avoid GNU C compiler warnings.
   CJB: 07-May-25: Dogfooding the _Optional qualifier.
+  CJB: 10-May-25: os_file_generate_error shouldn't return pointer to optional.
  */
 
 /* ISO library headers */
@@ -44,7 +45,7 @@ enum
 /* ----------------------------------------------------------------------- */
 /*                         Public functions                                */
 
-_Optional _kernel_oserror *os_file_generate_error(const char *f, int object_type)
+_kernel_oserror *os_file_generate_error(const char *f, int object_type)
 {
   _Optional _kernel_oserror *e;
   _kernel_osfile_block kosfb;
@@ -64,5 +65,5 @@ _Optional _kernel_oserror *os_file_generate_error(const char *f, int object_type
   assert(e != NULL);
   DEBUGF("FileError: _kernel_osfile set error %d:%s\n",
          e->errnum, e->errmess);
-  return e;
+  return (_kernel_oserror *)e;
 }
