@@ -27,7 +27,7 @@
 
 /* Local headers */
 #include "FileTypes.h"
-#include "Internal/CBMisc.h"
+#include "Internal/CBOSMisc.h"
 
 size_t copy_file_types(int *const dst, const int *const src,
   size_t const max)

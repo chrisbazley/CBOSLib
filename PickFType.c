@@ -27,7 +27,7 @@
 
 /* Local headers */
 #include "FileTypes.h"
-#include "Internal/CBMisc.h"
+#include "Internal/CBOSMisc.h"
 
 int pick_file_type(const int *const rec_file_types,
   const int *const send_file_types)

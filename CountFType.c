@@ -28,7 +28,7 @@
 
 /* Local headers */
 #include "FileTypes.h"
-#include "Internal/CBMisc.h"
+#include "Internal/CBOSMisc.h"
 
 size_t count_file_types(const int *const file_types)
 {

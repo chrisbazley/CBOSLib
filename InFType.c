@@ -27,7 +27,7 @@
 
 /* Local headers */
 #include "FileTypes.h"
-#include "Internal/CBMisc.h"
+#include "Internal/CBOSMisc.h"
 
 bool in_file_types(int const file_type, const int *const file_types)
 {
