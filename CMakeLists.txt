@@ -38,7 +38,8 @@ target_compile_options(CBOS PRIVATE
     $<$<CONFIG:Release>:-O3>
 )
 
-target_link_libraries(CBOS PRIVATE
+# Header files depend on definitions from this dependency
+target_link_libraries(CBOS PUBLIC
     OptionalAcornC
 )
 
