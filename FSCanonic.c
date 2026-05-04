@@ -61,7 +61,7 @@ _Optional _kernel_oserror *os_fscontrol_canonicalise(_Optional char *buffer, siz
   DEBUGF("FSCanonic: about to canonicalise path '%s' with path variable '%s' "
          "or string '%s'\n", f, pv ? pv : "", ps ? ps : "");
 
-  DEBUGF("FSCanonic: output buffer is %p of size %zu\n", buffer, buff_size);
+  DEBUGF("FSCanonic: output buffer is %p of size %zu\n", (void *)buffer, buff_size);
   regs.r[0] = FSControl_CanonicalisePath;
   regs.r[1] = (int)f;
   regs.r[2] = buffer ? (int)buffer : 0;
