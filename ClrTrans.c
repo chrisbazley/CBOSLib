@@ -27,7 +27,7 @@
 */
 
 /* ISO library headers */
-#include <stdint.h>
+#include <inttypes.h>
 #include <stddef.h>
 
 /* Acorn C/C++ library headers */
@@ -43,7 +43,7 @@
 /* Miscellaneous numeric constants */
 enum
 {
-  ErrorNum_BufferTooSmall    = 0xa06,
+  ErrorNum_BufferTooSmall = 0xa06,
   SpriteAreaPointerThreshold = 256,
   DUMMY_ERRNO = 255
 };
@@ -56,12 +56,10 @@ static void assign_regs(intptr_t regs[], const ColourTransContext *context);
 /* ----------------------------------------------------------------------- */
 /*                         Public functions                                */
 
-_Optional _kernel_oserror *colourtrans_read_palette(
-                                          unsigned int              flags,
-                                          const ColourTransContext *source,
-                                          _Optional PaletteEntry   *buffer,
-                                          size_t                    buff_size,
-                                          _Optional size_t         *nbytes)
+_Optional _kernel_oserror *
+colourtrans_read_palette(unsigned int flags, const ColourTransContext *source,
+                         _Optional PaletteEntry *buffer, size_t buff_size,
+                         _Optional size_t *nbytes)
 {
   _Optional _kernel_oserror *e = NULL;
   _kernel_swi_regs regs;
@@ -80,14 +78,14 @@ _Optional _kernel_oserror *colourtrans_read_palette(
   regs.r[3] = buff_size;
   regs.r[4] = flags;
   DEBUGF("ClrTrans: Calling ColourTrans_ReadPalette with "
-         "0x%x,0x%x,0x%x,0x%x,0x%x\n",
+         "0x%" PRIxPTR ",0x%" PRIxPTR ",0x%" PRIxPTR ",0x%" PRIxPTR
+         ",0x%" PRIxPTR "\n",
          regs.r[0], regs.r[1], regs.r[2], regs.r[3], regs.r[4]);
 
   e = _kernel_swi(ColourTrans_ReadPalette, &regs, &regs);
 
   DEBUGF("ClrTrans: %s is %d bytes\n",
-         buffer == NULL ? "required buffer size" : "unused space",
-         regs.r[3]);
+         buffer == NULL ? "required buffer size" : "unused space", regs.r[3]);
 
   /* Remaining space is still returned with a 'buffer too small' error */
   if (e == NULL || e->errnum == ErrorNum_BufferTooSmall)
@@ -113,11 +111,8 @@ _Optional _kernel_oserror *colourtrans_read_palette(
 /* ----------------------------------------------------------------------- */
 
 _Optional _kernel_oserror *colourtrans_generate_table(
-                               unsigned int                         flags,
-                               const ColourTransGenerateTableBlock *block,
-                               _Optional void                      *buffer,
-                               size_t                               buff_size,
-                               _Optional size_t                    *nbytes)
+  unsigned int flags, const ColourTransGenerateTableBlock *block,
+  _Optional void *buffer, size_t buff_size, _Optional size_t *nbytes)
 {
   _Optional _kernel_oserror *e = NULL;
   _kernel_swi_regs regs;
@@ -136,7 +131,8 @@ _Optional _kernel_oserror *colourtrans_generate_table(
   regs.r[6] = (intptr_t)block->workspace;
   regs.r[7] = (intptr_t)block->transfer;
   DEBUGF("ClrTrans: Calling ColourTrans_GenerateTable with "
-         "0x%x,0x%x,0x%x,0x%x,0x%x,0x%x,0x%x,0x%x\n",
+         "0x%" PRIxPTR ",0x%" PRIxPTR ",0x%" PRIxPTR ",0x%" PRIxPTR
+         ",0x%" PRIxPTR ",0x%" PRIxPTR ",0x%" PRIxPTR ",0x%" PRIxPTR "\n",
          regs.r[0], regs.r[1], regs.r[2], regs.r[3], regs.r[4], regs.r[5],
          regs.r[6], regs.r[7]);
 
@@ -167,7 +163,8 @@ _Optional _kernel_oserror *colourtrans_generate_table(
            R0-R3 and R5-R7 should have been preserved by the earlier SWI. */
         regs.r[4] = (intptr_t)buffer;
         DEBUGF("ClrTrans: Calling ColourTrans_GenerateTable with "
-               "0x%x,0x%x,0x%x,0x%x,0x%x,0x%x,0x%x,0x%x\n",
+               "0x%" PRIxPTR ",0x%" PRIxPTR ",0x%" PRIxPTR ",0x%" PRIxPTR
+               ",0x%" PRIxPTR ",0x%" PRIxPTR ",0x%" PRIxPTR ",0x%" PRIxPTR "\n",
                regs.r[0], regs.r[1], regs.r[2], regs.r[3], regs.r[4], regs.r[5],
                regs.r[6], regs.r[7]);
 
