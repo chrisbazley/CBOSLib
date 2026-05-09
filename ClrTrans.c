@@ -84,7 +84,7 @@ colourtrans_read_palette(unsigned int flags, const ColourTransContext *source,
 
   e = _kernel_swi(ColourTrans_ReadPalette, &regs, &regs);
 
-  DEBUGF("ClrTrans: %s is %d bytes\n",
+  DEBUGF("ClrTrans: %s is %" PRIdPTR " bytes\n",
          buffer == NULL ? "required buffer size" : "unused space", regs.r[3]);
 
   /* Remaining space is still returned with a 'buffer too small' error */
