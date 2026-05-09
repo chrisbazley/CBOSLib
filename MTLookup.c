@@ -32,6 +32,7 @@
 */
 
 /* ISO library headers */
+#include <stdint.h>
 #include <stddef.h>
 #include <stdarg.h>
 
@@ -118,8 +119,8 @@ _Optional _kernel_oserror *messagetrans_vlookup(_Optional MessagesFD   *mfd,
     /* Find the buffer size required for the output */
     char dummy[1];
 
-    regs.r[1] = (int)token;
-    regs.r[2] = (int)dummy; /* in case buffer == NULL */
+    regs.r[1] = (intptr_t)token;
+    regs.r[2] = (intptr_t)dummy; /* in case buffer == NULL */
     regs.r[3] = 0; /* size of buffer */
     e = _kernel_swi(MessageTrans_Lookup, &regs, &regs);
     if (e == NULL)
@@ -150,8 +151,8 @@ _Optional _kernel_oserror *messagetrans_vlookup(_Optional MessagesFD   *mfd,
 
     /* Generate the output string.
        R0 and R4-R7 should have been preserved by the earlier SWI. */
-    regs.r[1] = (int)token;
-    regs.r[2] = buffer ? (int)buffer : 0;
+    regs.r[1] = (intptr_t)token;
+    regs.r[2] = buffer ? (intptr_t)buffer : 0;
     regs.r[3] = buff_size;
     e = _kernel_swi(MessageTrans_Lookup, &regs, &regs);
     if (e == NULL)

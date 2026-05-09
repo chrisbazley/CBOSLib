@@ -27,6 +27,9 @@
 */
 
 /* ISO library headers */
+#include <stdint.h>
+
+/* ISO library headers */
 #include <stddef.h>
 
 /* Acorn C/C++ library headers */
@@ -75,7 +78,7 @@ _Optional _kernel_oserror *colourtrans_read_palette(
   assign_regs(&regs.r[0], source);
 
   /* Find buffer size and/or read palette into caller's buffer */
-  regs.r[2] = buffer ? (int)buffer : 0;
+  regs.r[2] = buffer ? (intptr_t)buffer : 0;
   regs.r[3] = buff_size;
   regs.r[4] = flags;
   DEBUGF("ClrTrans: Calling ColourTrans_ReadPalette with "
@@ -132,8 +135,8 @@ _Optional _kernel_oserror *colourtrans_generate_table(
 
   regs.r[4] = 0; /* return required buffer size */
   regs.r[5] = flags;
-  regs.r[6] = (int)block->workspace;
-  regs.r[7] = (int)block->transfer;
+  regs.r[6] = (intptr_t)block->workspace;
+  regs.r[7] = (intptr_t)block->transfer;
   DEBUGF("ClrTrans: Calling ColourTrans_GenerateTable with "
          "0x%x,0x%x,0x%x,0x%x,0x%x,0x%x,0x%x,0x%x\n",
          regs.r[0], regs.r[1], regs.r[2], regs.r[3], regs.r[4], regs.r[5],
@@ -164,7 +167,7 @@ _Optional _kernel_oserror *colourtrans_generate_table(
       {
         /* Generate the colour translation table.
            R0-R3 and R5-R7 should have been preserved by the earlier SWI. */
-        regs.r[4] = (int)buffer;
+        regs.r[4] = (intptr_t)buffer;
         DEBUGF("ClrTrans: Calling ColourTrans_GenerateTable with "
                "0x%x,0x%x,0x%x,0x%x,0x%x,0x%x,0x%x,0x%x\n",
                regs.r[0], regs.r[1], regs.r[2], regs.r[3], regs.r[4], regs.r[5],

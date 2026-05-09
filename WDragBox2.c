@@ -22,6 +22,9 @@
   CJB: 07-May-25: Dogfooding the _Optional qualifier.
  */
 
+/* ISO library headers */
+#include <stdint.h>
+
 /* Acorn C/C++ library headers */
 #include "kernel.h"
 #include "wimp.h"
@@ -57,7 +60,7 @@ _Optional _kernel_oserror *wimp_drag_box2(WimpDragBox *const block,
          flags);
 
    _kernel_swi_regs regs;
-   regs.r[1] = (int)block;
+   regs.r[1] = (intptr_t)block;
    regs.r[2] = MagicWord;
    regs.r[3] = flags;
 

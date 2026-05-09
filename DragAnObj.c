@@ -23,6 +23,7 @@
 */
 
 /* ISO library headers */
+#include <stdint.h>
 #include <stddef.h>
 
 /* Acorn C/C++ library headers */
@@ -60,9 +61,9 @@ _Optional _kernel_oserror *drag_an_object_start(unsigned int flags, int renderer
 
   regs.r[0] = flags;
   regs.r[1] = renderer;
-  regs.r[2] = (int)renderer_args;
-  regs.r[3] = (int)drag_box;
-  regs.r[4] = (int)parent_box;
+  regs.r[2] = (intptr_t)renderer_args;
+  regs.r[3] = (intptr_t)drag_box;
+  regs.r[4] = (intptr_t)parent_box;
   e = _kernel_swi(DragAnObject_Start, &regs, &regs);
   if (e != NULL)
   {

@@ -24,6 +24,9 @@
   CJB: 07-May-25: Dogfooding the _Optional qualifier.
  */
 
+/* ISO library headers */
+#include <stdint.h>
+
 /* Acorn C/C++ library headers */
 #include "kernel.h"
 #include "wimp.h"
@@ -49,7 +52,7 @@ _Optional _kernel_oserror *wimp_auto_scroll(unsigned int const flags,
 
    _kernel_swi_regs regs;
    regs.r[0] = flags;
-   regs.r[1] = (int)block;
+   regs.r[1] = (intptr_t)block;
 
   _Optional _kernel_oserror *const e = _kernel_swi(Wimp_AutoScroll, &regs, &regs);
   if (e)

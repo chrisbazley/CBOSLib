@@ -27,6 +27,7 @@
 
 /* ISO library headers */
 #include <stddef.h>
+#include <stdint.h>
 
 /* Acorn C/C++ library headers */
 #include "kernel.h"
@@ -47,8 +48,8 @@ _Optional _kernel_oserror *os_read_vdu_variables(const VDUVar vars[], int values
   assert(vars != NULL);
   assert(values != NULL);
 
-  regs.r[0] = (int)vars;
-  regs.r[1] = (int)values;
+  regs.r[0] = (intptr_t)vars;
+  regs.r[1] = (intptr_t)values;
   e = _kernel_swi(OS_ReadVduVariables, &regs, &regs);
   if (e == NULL)
   {

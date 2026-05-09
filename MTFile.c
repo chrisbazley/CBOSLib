@@ -27,6 +27,7 @@
 */
 
 /* ISO library headers */
+#include <stdint.h>
 #include <stddef.h>
 
 /* Acorn C/C++ library headers */
@@ -51,7 +52,7 @@ _Optional _kernel_oserror *messagetrans_file_info(const char   *filename,
   assert(filename != NULL);
 
   DEBUGF("MTFile: Getting message file info for path '%s'\n", filename);
-  regs.r[1] = (int)filename;
+  regs.r[1] = (intptr_t)filename;
   e = _kernel_swi(MessageTrans_FileInfo, &regs, &regs);
   if (e == NULL)
   {
@@ -83,9 +84,9 @@ _Optional _kernel_oserror *messagetrans_open_file(MessagesFD     *mfd,
   DEBUGF("MTFile: Opening message file %p at path '%s' with buffer %p\n",
          (void *)mfd, filename, buffer);
 
-  regs.r[0] = (int)mfd;
-  regs.r[1] = (int)filename;
-  regs.r[2] = buffer ? (int)buffer : 0;
+  regs.r[0] = (intptr_t)mfd;
+  regs.r[1] = (intptr_t)filename;
+  regs.r[2] = buffer ? (intptr_t)buffer : 0;
   e = _kernel_swi(MessageTrans_OpenFile, &regs, &regs);
   if (e != NULL)
   {
@@ -104,7 +105,7 @@ _Optional _kernel_oserror *messagetrans_close_file(MessagesFD *mfd)
   assert(mfd != NULL);
 
   DEBUGF("MTFile: Closing message file %p\n", (void *)mfd);
-  regs.r[0] = (int)mfd;
+  regs.r[0] = (intptr_t)mfd;
   e = _kernel_swi(MessageTrans_CloseFile, &regs, &regs);
   if (e != NULL)
   {

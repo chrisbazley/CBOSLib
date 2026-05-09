@@ -27,6 +27,7 @@
  */
 
 /* ISO library headers */
+#include <stdint.h>
 #include <stddef.h>
 
 /* Acorn C/C++ library headers */
@@ -63,10 +64,10 @@ _Optional _kernel_oserror *os_fscontrol_canonicalise(_Optional char *buffer, siz
 
   DEBUGF("FSCanonic: output buffer is %p of size %zu\n", (void *)buffer, buff_size);
   regs.r[0] = FSControl_CanonicalisePath;
-  regs.r[1] = (int)f;
-  regs.r[2] = buffer ? (int)buffer : 0;
-  regs.r[3] = pv ? (int)pv : 0;
-  regs.r[4] = ps ? (int)ps : 0;
+  regs.r[1] = (intptr_t)f;
+  regs.r[2] = buffer ? (intptr_t)buffer : 0;
+  regs.r[3] = pv ? (intptr_t)pv : 0;
+  regs.r[4] = ps ? (intptr_t)ps : 0;
   regs.r[5] = buff_size;
   e = _kernel_swi(OS_FSControl, &regs, &regs);
 

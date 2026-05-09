@@ -23,6 +23,7 @@
  */
 
 /* ISO library headers */
+#include <stdint.h>
 #include <stddef.h>
 
 /* Acorn C/C++ library headers */
@@ -50,9 +51,9 @@ _Optional _kernel_oserror *os_fscontrol_copy(const char *src,
 
   _kernel_swi_regs regs;
   regs.r[0] = FSControl_CopyObjects;
-  regs.r[1] = (int)src;
-  regs.r[2] = (int)dst;
-  regs.r[3] = (int)flags;
+  regs.r[1] = (intptr_t)src;
+  regs.r[2] = (intptr_t)dst;
+  regs.r[3] = (intptr_t)flags;
   _Optional _kernel_oserror *const e = _kernel_swi(OS_FSControl, &regs, &regs);
 
   if (e != NULL)
