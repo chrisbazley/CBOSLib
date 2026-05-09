@@ -28,8 +28,6 @@
 
 /* ISO library headers */
 #include <stdint.h>
-
-/* ISO library headers */
 #include <stddef.h>
 
 /* Acorn C/C++ library headers */
@@ -53,7 +51,7 @@ enum
 /* ----------------------------------------------------------------------- */
 /*                       Function prototypes                               */
 
-static void assign_regs(int regs[], const ColourTransContext *context);
+static void assign_regs(intptr_t regs[], const ColourTransContext *context);
 
 /* ----------------------------------------------------------------------- */
 /*                         Public functions                                */
@@ -191,7 +189,7 @@ _Optional _kernel_oserror *colourtrans_generate_table(
 /* ----------------------------------------------------------------------- */
 /*                         Private functions                               */
 
-static void assign_regs(int regs[], const ColourTransContext *context)
+static void assign_regs(intptr_t regs[], const ColourTransContext *context)
 {
   assert(regs != NULL);
   assert(context != NULL);
@@ -200,7 +198,7 @@ static void assign_regs(int regs[], const ColourTransContext *context)
   if (context->type == ColourTransContextType_Screen)
   {
     regs[0] = context->data.screen.mode;
-    regs[1] = (int)context->data.screen.palette;
+    regs[1] = (intptr_t)context->data.screen.palette;
 
     /* Actual determinant of context type for SWI is the value of R0 */
     assert(regs[0] < SpriteAreaPointerThreshold);
@@ -208,8 +206,8 @@ static void assign_regs(int regs[], const ColourTransContext *context)
   else
   {
     assert(context->type == ColourTransContextType_Sprite);
-    regs[0] = (int)context->data.sprite.sprite_area;
-    regs[1] = (int)context->data.sprite.name_or_pointer;
+    regs[0] = (intptr_t)context->data.sprite.sprite_area;
+    regs[1] = (intptr_t)context->data.sprite.name_or_pointer;
 
     /* Actual determinant of context type for SWI is the value of R0 */
     assert(regs[0] >= SpriteAreaPointerThreshold);
