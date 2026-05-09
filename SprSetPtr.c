@@ -24,6 +24,9 @@
   CJB: 07-May-25: Dogfooding the _Optional qualifier.
 */
 
+/* ISO library headers */
+#include <stdint.h>
+
 /* Acorn C/C++ library headers */
 #include "kernel.h"
 #include "swis.h"
@@ -46,13 +49,13 @@ _Optional _kernel_oserror *os_sprite_op_set_pointer(SpriteAreaHeader *const area
 
   _kernel_swi_regs regs = {.r = {
     SPRITEOP_USERAREA_SPRNAME + SPRITEOP_SETPTRSHAPE,
-    (int)area,
-    (int)name,
+    (intptr_t)area,
+    (intptr_t)name,
     flags,
     x,
     y,
-    scale ? (int)scale : 0,
-    colours ? (int)colours : 0,
+    scale ? (intptr_t)scale : 0,
+    colours ? (intptr_t)colours : 0,
   }};
 
   return _kernel_swi(OS_SpriteOp, &regs, &regs);

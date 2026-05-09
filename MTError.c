@@ -28,6 +28,7 @@
 */
 
 /* ISO library headers */
+#include <stdint.h>
 #include <stddef.h>
 #include <stdarg.h>
 #include <string.h>
@@ -92,8 +93,8 @@ _kernel_oserror *messagetrans_error_vlookup(
 
   _kernel_swi_regs regs = {
     .r = {
-      (int)&temp,
-      mfd ? (int)mfd : 0
+      (intptr_t)&temp,
+      mfd ? (intptr_t)mfd : 0
     }
   };
 
@@ -106,7 +107,7 @@ _kernel_oserror *messagetrans_error_vlookup(
     {
       param = va_arg(params, char *);
       DEBUGF("MTError: parameter %zu is '%s'\n", p, param ? param : "");
-      regs.r[4 + p] = param ? (int)param : 0;
+      regs.r[4 + p] = param ? (intptr_t)param : 0;
     }
   }
 

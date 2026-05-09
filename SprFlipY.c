@@ -22,6 +22,9 @@
   CJB: 07-May-25: Dogfooding the _Optional qualifier.
 */
 
+/* ISO library headers */
+#include <stdint.h>
+
 /* Acorn C/C++ library headers */
 #include "kernel.h"
 #include "swis.h"
@@ -41,8 +44,8 @@ _Optional _kernel_oserror *os_sprite_op_flip_y(
 
   _kernel_swi_regs regs = {.r = {
      SPRITEOP_USERAREA_SPRNAME + SPRITEOP_FLIP_Y,
-     (int)area,
-     (int)name,
+     (intptr_t)area,
+     (intptr_t)name,
   }};
 
   return _kernel_swi(OS_SpriteOp, &regs, &regs);
