@@ -99,7 +99,7 @@ _Optional _kernel_oserror *messagetrans_vlookup(_Optional MessagesFD   *mfd,
 
   _kernel_swi_regs regs = {
     .r = {
-      mfd ? (int)mfd : 0
+      mfd ? (intptr_t)mfd : 0
     }
   };
 
@@ -110,7 +110,7 @@ _Optional _kernel_oserror *messagetrans_vlookup(_Optional MessagesFD   *mfd,
     {
       char *const param = va_arg(params, char *);
       DEBUGF("MTLookup: parameter %zu is '%s'\n", p, param ? param : "");
-      regs.r[4 + p] = param ? (int)param : 0;
+      regs.r[4 + p] = param ? (intptr_t)param : 0;
     }
   }
 
