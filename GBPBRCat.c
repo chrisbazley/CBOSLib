@@ -25,6 +25,7 @@
  */
 
 /* ISO library headers */
+#include <stdint.h>
 #include <stddef.h>
 
 /* Acorn C/C++ library headers */
@@ -68,7 +69,7 @@ _Optional _kernel_oserror *os_gbpb_read_cat_no_path(const char *f, void *buffer,
   /* Disgusting type-cast from string pointer to integer (thanks, Acorn).
      Note that _kernel_osgbpb even updates 'gbpb_params' on error. */
   if (_kernel_osgbpb(OS_GBPB_ReadEntriesAndFileInfoFromDir,
-                     (unsigned int)f,
+                     (uintptr_t)f,
                      &gbpb_params) == _kernel_ERROR) {
     e = _kernel_last_oserror();
     assert(e != NULL);
