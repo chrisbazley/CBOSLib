@@ -26,8 +26,9 @@
 */
 
 /* ISO library headers */
-#include <stddef.h>
+#include <inttypes.>
 #include <stdbool.h>
+#include <stddef.h>
 
 /* Acorn C/C++ library headers */
 #include "kernel.h"
@@ -40,10 +41,8 @@
 /* ----------------------------------------------------------------------- */
 /*                         Public functions                                */
 
-_Optional _kernel_oserror *os_read_mode_variable(int      mode,
-                                             ModeVar  var,
-                                             int     *value,
-                                             bool    *valid)
+_Optional _kernel_oserror *os_read_mode_variable(int mode, ModeVar var,
+                                                 int *value, bool *valid)
 {
   _Optional _kernel_oserror *e = NULL;
   int carry;
@@ -62,7 +61,8 @@ _Optional _kernel_oserror *os_read_mode_variable(int      mode,
     }
     else
     {
-      DEBUGF("ReadModeV: value of mode 0x%x variable %d is %d (0x%x)\n",
+      DEBUGF("ReadModeV: value of mode 0x%x variable %d is %" PRIdPTR
+             " (0x%" PRIxPTR ")\n",
              mode, var, regs.r[2], regs.r[2]);
     }
 
@@ -74,8 +74,7 @@ _Optional _kernel_oserror *os_read_mode_variable(int      mode,
   }
   else
   {
-    DEBUGF("ReadModeV: SWI returned error 0x%x '%s'\n",
-           e->errnum, e->errmess);
+    DEBUGF("ReadModeV: SWI returned error 0x%x '%s'\n", e->errnum, e->errmess);
   }
   return e;
 }

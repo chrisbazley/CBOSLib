@@ -23,7 +23,7 @@
 */
 
 /* ISO library headers */
-#include <stdint.h>
+#include <inttypes.h>
 
 /* Acorn C/C++ library headers */
 #include "kernel.h"
@@ -33,14 +33,15 @@
 #include "OSSpriteOp.h"
 #include "Internal/CBOSMisc.h"
 
-_Optional _kernel_oserror *os_sprite_op_read_sprite_info(SpriteAreaHeader *const area,
-  const char *const name, _Optional bool *const has_mask,
-  _Optional int *const width, _Optional int *const height, _Optional int *const mode)
+_Optional _kernel_oserror *os_sprite_op_read_sprite_info(
+  SpriteAreaHeader *const area, const char *const name,
+  _Optional bool *const has_mask, _Optional int *const width,
+  _Optional int *const height, _Optional int *const mode)
 {
   assert(area != NULL);
   assert(name != NULL);
-  DEBUGF("SprReadInf: Reading info on sprite '%s' in area %p\n",
-         name, (void *)area);
+  DEBUGF("SprReadInf: Reading info on sprite '%s' in area %p\n", name,
+         (void *)area);
 
   _kernel_swi_regs regs;
   regs.r[0] = SPRITEOP_USERAREA_SPRNAME + SPRITEOP_READINFO;
@@ -50,9 +51,9 @@ _Optional _kernel_oserror *os_sprite_op_read_sprite_info(SpriteAreaHeader *const
   _Optional _kernel_oserror *const e = _kernel_swi(OS_SpriteOp, &regs, &regs);
   if (e == NULL)
   {
-    DEBUGF("SprReadInf: size %d,%d for mode %d, %s\n",
-           regs.r[3], regs.r[4], regs.r[6],
-           regs.r[5] ? "mask" : "no mask");
+    DEBUGF("SprReadInf: size %" PRIdPTR ",%" PRIdPTR " for mode %" PRIdPTR
+           ", %s\n",
+           regs.r[3], regs.r[4], regs.r[6], regs.r[5] ? "mask" : "no mask");
 
     if (width)
       *width = regs.r[3];
@@ -65,8 +66,7 @@ _Optional _kernel_oserror *os_sprite_op_read_sprite_info(SpriteAreaHeader *const
   }
   else
   {
-    DEBUGF("SprReadInf: SWI returned error 0x%x '%s'\n",
-           e->errnum, e->errmess);
+    DEBUGF("SprReadInf: SWI returned error 0x%x '%s'\n", e->errnum, e->errmess);
   }
   return e;
 }
