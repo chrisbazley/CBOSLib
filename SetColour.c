@@ -20,6 +20,7 @@
 /* History:
   CJB: 22-Mar-19: Created this source file.
   CJB: 07-May-25: Dogfooding the _Optional qualifier.
+  CJB: 11-May-26: Use unsigned literal as mask to stop warning.
 */
 
 /* Acorn C/C++ library headers */
@@ -37,7 +38,7 @@ _Optional _kernel_oserror *os_set_colour(unsigned int const flags, int const act
     colour, flags, action);
 
   _kernel_swi_regs regs;
-  regs.r[0] = (flags & ~0xf) | (action & 0xf);
+  regs.r[0] = (flags & ~0xfu) | (action & 0xf);
   regs.r[1] = colour;
 
   return _kernel_swi(OS_SetColour, &regs, &regs);
