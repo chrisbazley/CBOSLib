@@ -22,10 +22,11 @@
   CJB: 18-Apr-15: Assertions are now provided by debug.h.
   CJB: 21-Apr-16: Modified format strings to avoid GNU C compiler warnings.
   CJB: 07-May-25: Dogfooding the _Optional qualifier.
+  CJB: 11-May-26: Use PRIdPTR to print results from _kernel_osgbpb.
  */
 
 /* ISO library headers */
-#include <stdint.h>
+#include <inttypes.h>
 #include <stddef.h>
 
 /* Acorn C/C++ library headers */
@@ -76,7 +77,7 @@ _Optional _kernel_oserror *os_gbpb_read_cat_no_path(const char *f, void *buffer,
     DEBUGF("GBPBRCat: _kernel_osgbpb set error %d:%s\n",
            e->errnum, e->errmess);
   } else {
-    DEBUGF("GBPBRCat: %d entries were read and new offset is %d\n",
+    DEBUGF("GBPBRCat: %" PRIdPTR " entries were read and new offset is %" PRIdPTR "\n",
            gbpb_params.nbytes, gbpb_params.fileptr);
     *pos = gbpb_params.fileptr;
     *n = gbpb_params.nbytes;
