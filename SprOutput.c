@@ -20,10 +20,11 @@
 /* History:
   CJB: 16-Mar-19: Created this source file.
   CJB: 07-May-25: Dogfooding the _Optional qualifier.
+  CJB: 11-May-26: Use intptr_t for reason in SpriteRestoreOutputBlock.
 */
 
 /* ISO library headers */
-#include <stdint.h>
+#include <inttypes.h>
 
 /* Acorn C/C++ library headers */
 #include "kernel.h"
@@ -106,7 +107,7 @@ static _Optional _kernel_oserror *switch_output_common(SpriteAreaHeader *const a
           output->name_or_addr = (void *)regs.r[2];
           output->buffer = (void *)regs.r[3];
 
-          DEBUGF("SprOutput: Outputting restore parameters %d,%p,%p,%p\n",
+          DEBUGF("SprOutput: Outputting restore parameters %" PRIdPTR ",%p,%p,%p\n",
                  output->reason, (void *)output->area, output->name_or_addr,
                  output->buffer);
         }
