@@ -69,7 +69,8 @@ static _Optional _kernel_oserror *switch_output_common(SpriteAreaHeader *const a
   if (e == NULL)
   {
     assert(regs.r[3] >= 0);
-    size_t const buff_req = regs.r[3];
+    assert((uintptr_t)regs.r[3] <= SIZE_MAX);
+    size_t const buff_req = (size_t)regs.r[3];
     DEBUGF("SprOutput: Buffer requirement is %zu\n", buff_req);
     if (nbytes != NULL)
     {
