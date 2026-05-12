@@ -24,11 +24,14 @@
   CJB: 21-Apr-16: Modified format strings to avoid GNU C compiler warnings.
   CJB: 25-Aug-20: Fixed null pointers instead of strings passed to DEBUGF.
   CJB: 07-May-25: Dogfooding the _Optional qualifier.
+  CJB: 12-May-26: Make mixed-signedness buffer size calculations
+                  warning-free and hopefully more robust.
  */
 
 /* ISO library headers */
 #include <stdint.h>
 #include <stddef.h>
+#include <limits.h>
 
 /* Acorn C/C++ library headers */
 #include "kernel.h"
@@ -58,6 +61,10 @@ _Optional _kernel_oserror *os_fscontrol_canonicalise(_Optional char *buffer, siz
   {
     buff_size = 0;
   }
+  else if (buff_size > INTPTR_MAX)
+  {
+    buff_size = INTPTR_MAX;
+  }
 
   DEBUGF("FSCanonic: about to canonicalise path '%s' with path variable '%s' "
          "or string '%s'\n", f, pv ? pv : "", ps ? ps : "");
@@ -68,7 +75,7 @@ _Optional _kernel_oserror *os_fscontrol_canonicalise(_Optional char *buffer, siz
   regs.r[2] = buffer ? (intptr_t)buffer : 0;
   regs.r[3] = pv ? (intptr_t)pv : 0;
   regs.r[4] = ps ? (intptr_t)ps : 0;
-  regs.r[5] = buff_size;
+  regs.r[5] = (intptr_t)buff_size;
   e = _kernel_swi(OS_FSControl, &regs, &regs);
 
   if (e == NULL && nbytes != NULL)
@@ -77,15 +84,23 @@ _Optional _kernel_oserror *os_fscontrol_canonicalise(_Optional char *buffer, siz
     {
       /* If no buffer is supplied then the SWI returns minus the length
          of the canonicalised path (not including terminator) */
-      assert(regs.r[5] <= 0);
-      *nbytes = 1 - regs.r[5];
+      assert(regs.r[5] >= -INT_MAX);
+      intptr_t const len = -regs.r[5];
+      assert(len >= 0);
+      assert((size_t)len <= SIZE_MAX);
+      *nbytes = (size_t)len;
     }
     else
     {
       /* Otherwise the SWI returns the number of spare bytes in the buffer
          (including terminator) */
-      *nbytes = buff_size - regs.r[5] + 1;
+      intptr_t const spare = regs.r[5];
+      assert(spare >= 0);
+      assert((size_t)spare <= buff_size);
+      *nbytes = buff_size - (size_t)spare;
     }
+    assert(*nbytes < SIZE_MAX);
+    *nbytes += 1; // terminator
     DEBUGF("FSCanonic: required buffer size is %zu\n", *nbytes);
   }
   return e;

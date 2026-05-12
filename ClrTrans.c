@@ -24,10 +24,13 @@
   CJB: 21-Apr-16: Modified format strings to avoid GNU C compiler warnings.
   CJB: 17-Mar-19: Reduced the scope of buff_req.
   CJB: 07-May-25: Dogfooding the _Optional qualifier.
+  CJB: 12-May-26: Make mixed-signedness buffer size calculations warning-free
+                  and hopefully more robust.
 */
 
 /* ISO library headers */
 #include <inttypes.h>
+#include <limits.h>
 #include <stddef.h>
 
 /* Acorn C/C++ library headers */
@@ -70,12 +73,16 @@ colourtrans_read_palette(unsigned int flags, const ColourTransContext *source,
   {
     buff_size = 0;
   }
+  else if (buff_size > INTPTR_MAX)
+  {
+    buff_size = INTPTR_MAX;
+  }
 
   assign_regs(&regs.r[0], source);
 
   /* Find buffer size and/or read palette into caller's buffer */
   regs.r[2] = buffer ? (intptr_t)buffer : 0;
-  regs.r[3] = buff_size;
+  regs.r[3] = buff_size > INTPTR_MAX ? INTPTR_MAX : (intptr_t)buff_size;
   regs.r[4] = flags;
   DEBUGF("ClrTrans: Calling ColourTrans_ReadPalette with "
          "0x%" PRIxPTR ",0x%" PRIxPTR ",0x%" PRIxPTR ",0x%" PRIxPTR
@@ -91,15 +98,19 @@ colourtrans_read_palette(unsigned int flags, const ColourTransContext *source,
   if (e == NULL || e->errnum == ErrorNum_BufferTooSmall)
   {
     /* Output the required buffer size */
+    assert(regs.r[3] >= 0);
+    assert((size_t)regs.r[3] <= SIZE_MAX);
+    size_t const cnt = (size_t)regs.r[3];
+
     size_t req_size;
     if (buffer == NULL)
     {
-      assert(regs.r[3] >= 0);
-      req_size = regs.r[3]; /* SWI returned the required buffer size */
+      req_size = cnt; /* SWI returned the required buffer size */
     }
     else
     {
-      req_size = buff_size - regs.r[3]; /* SWI returned remaining space */
+      assert(buff_size >= cnt);
+      req_size = buff_size - cnt; /* SWI returned remaining space */
     }
     DEBUGF("ClrTrans: buffer requirement is %zu\n", req_size);
     if (nbytes != NULL)
@@ -141,7 +152,7 @@ _Optional _kernel_oserror *colourtrans_generate_table(
   if (e == NULL)
   {
     assert(regs.r[4] >= 0);
-    size_t const buff_req = regs.r[4];
+    size_t const buff_req = (uintptr_t)regs.r[4];
     if (nbytes != NULL)
     {
       /* Output the required buffer size */
