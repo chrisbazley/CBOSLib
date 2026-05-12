@@ -92,7 +92,7 @@ _Optional _kernel_oserror *messagetrans_vlookup(_Optional MessagesFD   *mfd,
   {
     buff_size = 0;
   }
-  else if (buff_size > INTPTR_MAX)
+  else if (buff_size > (uintptr_t)INTPTR_MAX)
   {
     buff_size = INTPTR_MAX;
   }
@@ -132,7 +132,7 @@ _Optional _kernel_oserror *messagetrans_vlookup(_Optional MessagesFD   *mfd,
     if (e == NULL)
     {
       assert(regs.r[3] >= 0);
-      assert(regs.r[3] <= SIZE_MAX);
+      assert((size_t)regs.r[3] <= SIZE_MAX);
       size_t const buff_req = (size_t)regs.r[3];
 
       /* Output the required buffer size (including the terminator) */
@@ -160,7 +160,7 @@ _Optional _kernel_oserror *messagetrans_vlookup(_Optional MessagesFD   *mfd,
        R0 and R4-R7 should have been preserved by the earlier SWI. */
     regs.r[1] = (intptr_t)token;
     regs.r[2] = buffer ? (intptr_t)buffer : 0;
-    assert(buff_size <= INTPTR_MAX);
+    assert(buff_size <= (uintptr_t)INTPTR_MAX);
     regs.r[3] = (intptr_t)buff_size;
     e = _kernel_swi(MessageTrans_Lookup, &regs, &regs);
     if (e == NULL)
