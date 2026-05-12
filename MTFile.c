@@ -59,16 +59,16 @@ _Optional _kernel_oserror *messagetrans_file_info(const char   *filename,
   if (e == NULL)
   {
     assert(regs.r[0] >= 0);
-    assert((unsigned)regs.r[0] <= UINT_MAX);
+    assert((uintptr_t)regs.r[0] <= UINT_MAX);
 
     if (flags != NULL)
       *flags = (unsigned)regs.r[0];
 
     assert(regs.r[2] >= 0);
-    assert((size_t)regs.r[2] <= SIZE_MAX);
+    assert((uintptr_t)regs.r[2] <= SIZE_MAX);
 
     if (buff_size != NULL)
-      *buff_size = (size_t)regs.r[2];
+      *buff_size = (uintptr_t)regs.r[2];
   }
   else
   {
