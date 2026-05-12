@@ -94,7 +94,7 @@ _Optional _kernel_oserror *messagetrans_vlookup(_Optional MessagesFD   *mfd,
   }
   else if (buff_size > (uintptr_t)INTPTR_MAX)
   {
-    buff_size = INTPTR_MAX;
+    buff_size = (uintptr_t)INTPTR_MAX;
   }
 
   DEBUGF("MTLookup: looking up token '%s' in message file %p "
