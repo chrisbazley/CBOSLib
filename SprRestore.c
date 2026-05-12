@@ -20,10 +20,11 @@
 /* History:
   CJB: 16-Mar-19: Created this source file.
   CJB: 07-May-25: Dogfooding the _Optional qualifier.
+  CJB: 12-May-26: Use PTRdPTR for reason in the debugging printf.
 */
 
 /* ISO library headers */
-#include <stdint.h>
+#include <inttypes.h>
 
 /* Acorn C/C++ library headers */
 #include "kernel.h"
@@ -37,7 +38,7 @@ _Optional _kernel_oserror *os_sprite_op_restore_output(
   const SpriteRestoreOutputBlock *const output)
 {
   assert(output != NULL);
-  DEBUGF("SprRestore: Restoring output to %p in area %p with reason %d "
+  DEBUGF("SprRestore: Restoring output to %p in area %p with reason %" PRIdPTR " "
          "and buffer %p\n", output->name_or_addr, (void *)output->area,
          output->reason, output->buffer);
 
