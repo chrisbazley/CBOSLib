@@ -61,9 +61,9 @@ _Optional _kernel_oserror *os_fscontrol_canonicalise(_Optional char *buffer, siz
   {
     buff_size = 0;
   }
-  else if (buff_size > INTPTR_MAX)
+  else if (buff_size > (uintptr_t)INTPTR_MAX)
   {
-    buff_size = INTPTR_MAX;
+    buff_size = (uintptr_t)INTPTR_MAX;
   }
 
   DEBUGF("FSCanonic: about to canonicalise path '%s' with path variable '%s' "
@@ -87,7 +87,7 @@ _Optional _kernel_oserror *os_fscontrol_canonicalise(_Optional char *buffer, siz
       assert(regs.r[5] >= -INT_MAX);
       intptr_t const len = -regs.r[5];
       assert(len >= 0);
-      assert((size_t)len <= SIZE_MAX);
+      assert((uintptr_t)len <= SIZE_MAX);
       *nbytes = (size_t)len;
     }
     else
@@ -96,7 +96,7 @@ _Optional _kernel_oserror *os_fscontrol_canonicalise(_Optional char *buffer, siz
          (including terminator) */
       intptr_t const spare = regs.r[5];
       assert(spare >= 0);
-      assert((size_t)spare <= buff_size);
+      assert((uintptr_t)spare <= buff_size);
       *nbytes = buff_size - (size_t)spare;
     }
     assert(*nbytes < SIZE_MAX);
