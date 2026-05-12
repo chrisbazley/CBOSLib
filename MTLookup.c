@@ -29,6 +29,7 @@
                   of 'size of result before terminator' (like the SWI).
   CJB: 29-Aug-22: Use size_t rather than unsigned int for nparam.
   CJB: 07-May-25: Dogfooding the _Optional qualifier.
+  CJB: 12-May-26: Handle mixed-signedness calculations more carefully.
 */
 
 /* ISO library headers */
@@ -90,6 +91,10 @@ _Optional _kernel_oserror *messagetrans_vlookup(_Optional MessagesFD   *mfd,
   {
     buff_size = 0;
   }
+  else if (buff_size > INTPTR_MAX)
+  {
+    buff_size = INTPTR_MAX;
+  }
 
   DEBUGF("MTLookup: looking up token '%s' in message file %p "
          "with %zu parameters\n", token, (void *)mfd, nparam);
@@ -126,7 +131,8 @@ _Optional _kernel_oserror *messagetrans_vlookup(_Optional MessagesFD   *mfd,
     if (e == NULL)
     {
       assert(regs.r[3] >= 0);
-      size_t const buff_req = regs.r[3];
+      assert(regs.r[3] <= SIZE_MAX);
+      size_t const buff_req = (size_t)regs.r[3];
 
       /* Output the required buffer size (including the terminator) */
       *nbytes =  buff_req + 1;
@@ -153,7 +159,8 @@ _Optional _kernel_oserror *messagetrans_vlookup(_Optional MessagesFD   *mfd,
        R0 and R4-R7 should have been preserved by the earlier SWI. */
     regs.r[1] = (intptr_t)token;
     regs.r[2] = buffer ? (intptr_t)buffer : 0;
-    regs.r[3] = buff_size;
+    assert(buff_size <= INTPTR_MAX);
+    regs.r[3] = (intptr_t)buff_size;
     e = _kernel_swi(MessageTrans_Lookup, &regs, &regs);
     if (e == NULL)
     {
