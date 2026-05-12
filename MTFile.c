@@ -24,9 +24,11 @@
                   intercept for stress testing.
   CJB: 18-Apr-16: Cast pointer parameters to void * to match %p.
   CJB: 07-May-25: Dogfooding the _Optional qualifier.
+  CJB: 12-May-26: Validate and explicitly convert output register values.
 */
 
 /* ISO library headers */
+#include <limits.h>
 #include <stdint.h>
 #include <stddef.h>
 
@@ -56,11 +58,17 @@ _Optional _kernel_oserror *messagetrans_file_info(const char   *filename,
   e = _kernel_swi(MessageTrans_FileInfo, &regs, &regs);
   if (e == NULL)
   {
+    assert(regs.r[0] >= 0);
+    assert(regs.r[0] <= UINT_MAX);
+
     if (flags != NULL)
-      *flags = regs.r[0];
+      *flags = (unsigned)regs.r[0];
+
+    assert(regs.r[2] >= 0);
+    assert(regs.r[2] <= SIZE_MAX);
 
     if (buff_size != NULL)
-      *buff_size = regs.r[2];
+      *buff_size = (size_t)regs.r[2];
   }
   else
   {
