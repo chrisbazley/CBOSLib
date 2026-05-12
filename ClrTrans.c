@@ -73,9 +73,9 @@ colourtrans_read_palette(unsigned int flags, const ColourTransContext *source,
   {
     buff_size = 0;
   }
-  else if (buff_size > INTPTR_MAX)
+  else if (buff_size > (uintptr_t)INTPTR_MAX)
   {
-    buff_size = INTPTR_MAX;
+    buff_size = (uintptr_t)INTPTR_MAX;
   }
 
   assign_regs(&regs.r[0], source);
@@ -99,7 +99,7 @@ colourtrans_read_palette(unsigned int flags, const ColourTransContext *source,
   {
     /* Output the required buffer size */
     assert(regs.r[3] >= 0);
-    assert((size_t)regs.r[3] <= SIZE_MAX);
+    assert((uintptr_t)regs.r[3] <= SIZE_MAX);
     size_t const cnt = (size_t)regs.r[3];
 
     size_t req_size;
@@ -152,7 +152,9 @@ _Optional _kernel_oserror *colourtrans_generate_table(
   if (e == NULL)
   {
     assert(regs.r[4] >= 0);
-    size_t const buff_req = (uintptr_t)regs.r[4];
+    assert((uintptr_t)regs.r[4] <= SIZE_MAX);
+    size_t const buff_req = (size_t)regs.r[4];
+
     if (nbytes != NULL)
     {
       /* Output the required buffer size */
