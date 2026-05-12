@@ -84,7 +84,7 @@ _Optional _kernel_oserror *os_fscontrol_canonicalise(_Optional char *buffer, siz
     {
       /* If no buffer is supplied then the SWI returns minus the length
          of the canonicalised path (not including terminator) */
-      assert(regs.r[5] >= -INT_MAX);
+      assert(regs.r[5] >= -INTPTR_MAX);
       intptr_t const len = -regs.r[5];
       assert(len >= 0);
       assert((uintptr_t)len <= SIZE_MAX);
