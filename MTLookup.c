@@ -132,7 +132,7 @@ _Optional _kernel_oserror *messagetrans_vlookup(_Optional MessagesFD   *mfd,
     if (e == NULL)
     {
       assert(regs.r[3] >= 0);
-      assert((size_t)regs.r[3] <= SIZE_MAX);
+      assert((uintptr_t)regs.r[3] <= SIZE_MAX);
       size_t const buff_req = (size_t)regs.r[3];
 
       /* Output the required buffer size (including the terminator) */
