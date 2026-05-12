@@ -68,7 +68,7 @@ _Optional _kernel_oserror *messagetrans_file_info(const char   *filename,
     assert((uintptr_t)regs.r[2] <= SIZE_MAX);
 
     if (buff_size != NULL)
-      *buff_size = (uintptr_t)regs.r[2];
+      *buff_size = (size_t)regs.r[2];
   }
   else
   {
