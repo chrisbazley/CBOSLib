@@ -23,12 +23,15 @@
   CJB: 31-Jan-16: Substituted _kernel_swi for _swix because it's easier to
                   intercept for stress testing.
   CJB: 07-May-25: Dogfooding the _Optional qualifier.
+  CJB: 13-May-26: Assert OS_ReadModeVariable result is in range and
+                  explicitly convert it to int.
 */
 
 /* ISO library headers */
 #include <inttypes.h>
 #include <stdbool.h>
 #include <stddef.h>
+#include <limits.h>
 
 /* Acorn C/C++ library headers */
 #include "kernel.h"
@@ -67,8 +70,11 @@ _Optional _kernel_oserror *os_read_mode_variable(int mode, ModeVar var,
     }
 
     if (value != NULL)
-      *value = regs.r[2];
-
+    {
+      assert(regs.r[2] >= INT_MIN);
+      assert(regs.r[2] <= INT_MAX);
+      *value = (int)regs.r[2];
+    }
     if (valid != NULL)
       *valid = !carry;
   }
