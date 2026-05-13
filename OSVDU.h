@@ -27,6 +27,8 @@ History:
   CJB: 22-Mar-19: Added the os_set_colour function.
   CJB: 11-Dec-20: Remove redundant uses of the 'extern' keyword.
   CJB: 07-May-25: Dogfooding the _Optional qualifier.
+  CJB: 13-May-26: Use type intptr_t for VDU variable values because some
+                  values are addresses.
 */
 
 #ifndef OSVDU_h
@@ -34,6 +36,7 @@ History:
 
 /* ISO library headers */
 #include <stdbool.h>
+#include <stdint.h>
 
 /* Acorn C/C++ library headers */
 #include "kernel.h"
@@ -241,7 +244,7 @@ _Optional _kernel_oserror *os_plot(int /*command*/, int /*x*/, int /*y*/);
     */
 
 _Optional _kernel_oserror *os_read_vdu_variables(const VDUVar /*vars*/[],
-                                                 int          /*values*/[]);
+                                                 intptr_t     /*values*/[]);
    /*
     * Reads information about the current state of the VDU drivers. The first
     * argument should point to an array of VDU or mode variable numbers to be

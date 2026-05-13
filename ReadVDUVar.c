@@ -23,11 +23,13 @@
   CJB: 31-Jan-16: Substituted _kernel_swi for _swix because it's easier to
                   intercept for stress testing.
   CJB: 07-May-25: Dogfooding the _Optional qualifier.
+  CJB: 13-May-26: Use type intptr_t for VDU variable values because some
+                  values are addresses.
 */
 
 /* ISO library headers */
 #include <stddef.h>
-#include <stdint.h>
+#include <inttypes.h>
 
 /* Acorn C/C++ library headers */
 #include "kernel.h"
@@ -40,7 +42,7 @@
 /* ----------------------------------------------------------------------- */
 /*                         Public functions                                */
 
-_Optional _kernel_oserror *os_read_vdu_variables(const VDUVar vars[], int values[])
+_Optional _kernel_oserror *os_read_vdu_variables(const VDUVar vars[], intptr_t values[])
 {
   _Optional _kernel_oserror *e = NULL;
   _kernel_swi_regs regs;
@@ -54,10 +56,9 @@ _Optional _kernel_oserror *os_read_vdu_variables(const VDUVar vars[], int values
   if (e == NULL)
   {
 #ifdef DEBUG_OUTPUT
-    unsigned int i;
-    for (i = 0; vars[i] != VDUVar_EndOfList; i++)
+    for (int i = 0; vars[i] != VDUVar_EndOfList; i++)
     {
-      DEBUGF("ReadVDUVar: value of VDU variable %d is 0x%x\n",
+      DEBUGF("ReadVDUVar: value of VDU variable %d is 0x%" PRIxPTR "\n",
              vars[i], values[i]);
     }
 #endif
