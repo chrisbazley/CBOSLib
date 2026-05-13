@@ -22,10 +22,13 @@
   CJB: 01-Aug-22: Only assert that a non-null pointer was passed if
                   enabling scrolling.
   CJB: 07-May-25: Dogfooding the _Optional qualifier.
+  CJB: 13-May-26: Assert narrow enough status returned by the SWI and
+                  explicitly convert it to type unsigned int.
  */
 
 /* ISO library headers */
 #include <stdint.h>
+#include <limits.h>
 
 /* Acorn C/C++ library headers */
 #include "kernel.h"
@@ -61,7 +64,8 @@ _Optional _kernel_oserror *wimp_auto_scroll(unsigned int const flags,
   }
   else if (status)
   {
-    *status = regs.r[0];
+    assert((uintptr_t)regs.r[0] <= UINT_MAX);
+    *status = (unsigned int)regs.r[0];
     DEBUGF("WAutoScroll: SWI returned status 0x%x\n", *status);
   }
 
