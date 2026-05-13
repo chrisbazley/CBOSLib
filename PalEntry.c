@@ -28,6 +28,7 @@
   CJB: 06-Jun-20: Component values are now clipped by an inline function.
                   Reordered functions to allow removal of pre-declarations.
                   Added more 'const' qualifiers to declarations.
+  CJB: 13-May-26: Use int instead of unsigned int for component values.
  */
 
 /* ISO library headers */
@@ -59,12 +60,16 @@ enum
 /* ----------------------------------------------------------------------- */
 /*                         Private functions                               */
 
-static inline unsigned int clip_component(unsigned int comp,
-  char const *const name)
+static inline int clip_component(int comp, char const *const name)
 {
-  if (comp > MaxColourComponent)
+  if (comp < 0)
   {
-    DEBUGF("PalEntry: Clipping %s component %u\n", name, comp);
+    DEBUGF("PalEntry: Clipping %s component %d\n", name, comp);
+    comp = 0;
+  }
+  else if (comp > MaxColourComponent)
+  {
+    DEBUGF("PalEntry: Clipping %s component %d\n", name, comp);
     comp = MaxColourComponent;
   }
   return comp;
@@ -72,9 +77,9 @@ static inline unsigned int clip_component(unsigned int comp,
 
 /* ----------------------------------------------------------------------- */
 
-static unsigned int calc_brightness(unsigned int const red,
-                                    unsigned int const green,
-                                    unsigned int const blue)
+static int calc_brightness(int const red,
+                           int const green,
+                           int const blue)
 {
   assert(red <= MaxColourComponent);
   assert(green <= MaxColourComponent);
@@ -83,30 +88,30 @@ static unsigned int calc_brightness(unsigned int const red,
   /* Calculate brightness of given palette entry
     (use fixed point arithmetic for speed and fractional accuracy). */
   unsigned long brightness =
-    (unsigned long)(CIE_RED_WEIGHT * FixedPointOne) * red +
-    (unsigned long)(CIE_GREEN_WEIGHT * FixedPointOne) * green +
-    (unsigned long)(CIE_BLUE_WEIGHT * FixedPointOne) * blue;
+    (unsigned long)(CIE_RED_WEIGHT * FixedPointOne) * (unsigned)red +
+    (unsigned long)(CIE_GREEN_WEIGHT * FixedPointOne) * (unsigned)green +
+    (unsigned long)(CIE_BLUE_WEIGHT * FixedPointOne) * (unsigned)blue;
 
   brightness /= FixedPointOne;
   assert(brightness <= MaxBrightness);
   assert(MaxBrightness == MaxColourComponent); /* otherwise the calculation
                                                   would be more complex */
 
-  DEBUGF("PalEntry: brightness of R:%u G:%u B:%u is %lu\n",
+  DEBUGF("PalEntry: brightness of R:%d G:%d B:%d is %lu\n",
          red, green, blue, brightness);
 
-  return (unsigned int)brightness;
+  return (int)brightness;
 }
 
 /* ----------------------------------------------------------------------- */
 
-static unsigned int find_nearest(PaletteEntry const palette[],
-                                 unsigned int const ncols,
-                                 unsigned int const red,
-                                 unsigned int const green,
-                                 unsigned int const blue)
+static int find_nearest(PaletteEntry const palette[],
+                        int const ncols,
+                        int const red,
+                        int const green,
+                        int const blue)
 {
-  unsigned int least_dist = UINT_MAX, nearest = 0;
+  int least_dist = INT_MAX, nearest = 0;
 
   assert(palette != NULL);
   assert(ncols > 0);
@@ -114,7 +119,7 @@ static unsigned int find_nearest(PaletteEntry const palette[],
   assert(green <= MaxColourComponent);
   assert(blue <= MaxColourComponent);
 
-  for (unsigned int index = 0; index < ncols; index++)
+  for (int index = 0; index < ncols; index++)
   {
     int const red_diff = PALETTE_GET_RED(palette[index]) - red,
               green_diff = PALETTE_GET_GREEN(palette[index]) - green,
@@ -122,7 +127,7 @@ static unsigned int find_nearest(PaletteEntry const palette[],
 
     /* Like ColourTrans we use a least squares function,
        but we have control over the weights */
-    unsigned int const dist =
+    int const dist =
            RedWeight * red_diff * red_diff +
            GreenWeight * green_diff * green_diff +
            BlueWeight * blue_diff * blue_diff;
@@ -134,8 +139,8 @@ static unsigned int find_nearest(PaletteEntry const palette[],
     }
   }
 
-  DEBUGF("PalEntry: colour %u (0x%08x) is nearest to R:%u G:%u B:%u in "
-         "palette %p with %u entries\n", nearest, palette[nearest],
+  DEBUGF("PalEntry: colour %d (0x%08x) is nearest to R:%d G:%d B:%d in "
+         "palette %p with %d entries\n", nearest, palette[nearest],
          red, green, blue, (void *)palette, ncols);
 
   return nearest;
@@ -144,7 +149,7 @@ static unsigned int find_nearest(PaletteEntry const palette[],
 /* ----------------------------------------------------------------------- */
 /*                         Public functions                                */
 
-unsigned int palette_entry_brightness(PaletteEntry const colour)
+int palette_entry_brightness(PaletteEntry const colour)
 {
   return calc_brightness(PALETTE_GET_RED(colour),
                          PALETTE_GET_GREEN(colour),
@@ -153,9 +158,7 @@ unsigned int palette_entry_brightness(PaletteEntry const colour)
 
 /*----------------------------------------------------------------------- */
 
-unsigned int rgb_brightness(unsigned int red,
-                            unsigned int green,
-                            unsigned int blue)
+int rgb_brightness(int red, int green, int blue)
 {
   CLIP_COMPONENT(red);
   CLIP_COMPONENT(green);
@@ -166,9 +169,7 @@ unsigned int rgb_brightness(unsigned int red,
 
 /*----------------------------------------------------------------------- */
 
-PaletteEntry make_palette_entry(unsigned int red,
-                                unsigned int green,
-                                unsigned int blue)
+PaletteEntry make_palette_entry(int red, int green, int blue)
 {
   PaletteEntry colour;
 
@@ -176,11 +177,11 @@ PaletteEntry make_palette_entry(unsigned int red,
   CLIP_COMPONENT(green);
   CLIP_COMPONENT(blue);
 
-  colour = ((red << PaletteEntry_RedShift) & PaletteEntry_RedMask) |
-           ((green << PaletteEntry_GreenShift) & PaletteEntry_GreenMask) |
-           ((blue << PaletteEntry_BlueShift) & PaletteEntry_BlueMask);
+  colour = (((PaletteEntry)red << PaletteEntry_RedShift) & PaletteEntry_RedMask) |
+           (((PaletteEntry)green << PaletteEntry_GreenShift) & PaletteEntry_GreenMask) |
+           (((PaletteEntry)blue << PaletteEntry_BlueShift) & PaletteEntry_BlueMask);
 
-  DEBUGF("PalEntry: made palette entry 0x%x from red %u, green %u, blue %u\n",
+  DEBUGF("PalEntry: made palette entry 0x%x from red %d, green %d, blue %d\n",
          colour, red, green, blue);
 
   return colour;
@@ -188,9 +189,9 @@ PaletteEntry make_palette_entry(unsigned int red,
 
 /*----------------------------------------------------------------------- */
 
-unsigned int nearest_palette_entry(PaletteEntry const palette[],
-                                   unsigned int const ncols,
-                                   PaletteEntry const colour)
+int nearest_palette_entry(PaletteEntry const palette[],
+                          int const ncols,
+                          PaletteEntry const colour)
 {
   assert(palette != NULL);
   assert(ncols > 0);
@@ -204,11 +205,11 @@ unsigned int nearest_palette_entry(PaletteEntry const palette[],
 
 /*----------------------------------------------------------------------- */
 
-unsigned int nearest_palette_entry_rgb(PaletteEntry const palette[],
-                                       unsigned int const ncols,
-                                       unsigned int red,
-                                       unsigned int green,
-                                       unsigned int blue)
+int nearest_palette_entry_rgb(PaletteEntry const palette[],
+                              int const ncols,
+                              int red,
+                              int green,
+                              int blue)
 {
   assert(palette != NULL);
   assert(ncols > 0);

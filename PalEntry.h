@@ -26,12 +26,15 @@ History:
   CJB: 01-Oct-09: Created this header file.
   CJB: 24-Dec-19: Input palette data can now be const.
   CJB: 11-Dec-20: Remove redundant uses of the 'extern' keyword.
+  CJB: 13-May-26: Use int instead of unsigned int for component values.
 */
 
 #ifndef PalEntry_h
 #define PalEntry_h
 
-typedef unsigned int PaletteEntry;
+#include <stdint.h>
+
+typedef uint32_t PaletteEntry;
 
 /* Bit masks to encode or decode a palette entry */
 #define PaletteEntry_RedMask   (0x0000ff00u)
@@ -50,16 +53,16 @@ enum
 };
 
 /* Macros to extract individual colour components from a palette entry */
-#define PALETTE_GET_RED(palette) (((palette) & PaletteEntry_RedMask) >> \
-                                  PaletteEntry_RedShift)
+#define PALETTE_GET_RED(palette) ((int)(((palette) & PaletteEntry_RedMask) >> \
+                                        PaletteEntry_RedShift))
 
-#define PALETTE_GET_GREEN(palette) (((palette) & PaletteEntry_GreenMask) >> \
-                                    PaletteEntry_GreenShift)
+#define PALETTE_GET_GREEN(palette) ((int)(((palette) & PaletteEntry_GreenMask) >> \
+                                          PaletteEntry_GreenShift))
 
-#define PALETTE_GET_BLUE(palette) (((palette) & PaletteEntry_BlueMask) >> \
-                                   PaletteEntry_BlueShift)
+#define PALETTE_GET_BLUE(palette) ((int)(((palette) & PaletteEntry_BlueMask) >> \
+                                         PaletteEntry_BlueShift))
 
-unsigned int palette_entry_brightness(PaletteEntry colour);
+int palette_entry_brightness(PaletteEntry colour);
    /*
     * Calculates an integer value which reflects the brightness of a given
     * palette entry (0xBbGgRr00 format). Uses CIE luminance weights for red,
@@ -67,9 +70,7 @@ unsigned int palette_entry_brightness(PaletteEntry colour);
     * Returns: Brightness of the palette entry, between 0 and MaxBrightness.
     */
 
-unsigned int rgb_brightness(unsigned int red,
-                            unsigned int green,
-                            unsigned int blue);
+int rgb_brightness(int red, int green, int blue);
    /*
     * Equivalent to palette_entry_brightness except that the input colour is
     * expressed as red, green and blue components. Input values larger than
@@ -77,9 +78,7 @@ unsigned int rgb_brightness(unsigned int red,
     * Returns: Brightness of the RGB triplet, between 0 and MaxBrightness.
     */
 
-PaletteEntry make_palette_entry(unsigned int red,
-                                unsigned int green,
-                                unsigned int blue);
+PaletteEntry make_palette_entry(int red, int green, int blue);
    /*
     * Combines the specified red, green and blue components to make a palette
     * entry. Input values larger than MaxColourComponent will be clipped to the
@@ -87,9 +86,8 @@ PaletteEntry make_palette_entry(unsigned int red,
     * Returns: Palette entry (0xBbGgRr00 format) equivalent to RGB triplet.
     */
 
-unsigned int nearest_palette_entry(PaletteEntry const palette[],
-                                   unsigned int ncols,
-                                   PaletteEntry colour);
+int nearest_palette_entry(PaletteEntry const palette[],
+                          int ncols, PaletteEntry colour);
    /*
     * Searches within a specified array of 'ncols' palette entries (0xBbGgRr00
     * format) for the one which most closely approximates a given colour, and
@@ -97,11 +95,8 @@ unsigned int nearest_palette_entry(PaletteEntry const palette[],
     * Returns: Index of the palette entry closest to that specified.
     */
 
-unsigned int nearest_palette_entry_rgb(PaletteEntry const palette[],
-                                       unsigned int ncols,
-                                       unsigned int red,
-                                       unsigned int green,
-                                       unsigned int blue);
+int nearest_palette_entry_rgb(PaletteEntry const palette[],
+                              int ncols, int red, int green, int blue);
    /*
     * Equivalent to nearest_palette_entry except that the target colour is
     * expressed as red, green and blue colour components. Input values larger
