@@ -20,10 +20,13 @@
 /* History:
   CJB: 30-Mar-19: Created this source file.
   CJB: 07-May-25: Dogfooding the _Optional qualifier.
+  CJB: 13-May-26: Assert SWI results are small enough and explicitly
+                  convert them to type int.
 */
 
 /* ISO library headers */
 #include <inttypes.h>
+#include <limits.h>
 
 /* Acorn C/C++ library headers */
 #include "kernel.h"
@@ -56,13 +59,27 @@ _Optional _kernel_oserror *os_sprite_op_read_sprite_info(
            regs.r[3], regs.r[4], regs.r[6], regs.r[5] ? "mask" : "no mask");
 
     if (width)
-      *width = regs.r[3];
+    {
+      assert(regs.r[3] >= INT_MIN);
+      assert(regs.r[3] <= INT_MAX);
+      *width = (int)regs.r[3];
+    }
     if (height)
-      *height = regs.r[4];
+    {
+      assert(regs.r[4] >= INT_MIN);
+      assert(regs.r[4] <= INT_MAX);
+      *height = (int)regs.r[4];
+    }
     if (has_mask)
-      *has_mask = regs.r[5];
+    {
+      *has_mask = regs.r[5] != 0;
+    }
     if (mode)
-      *mode = regs.r[6];
+    {
+      assert(regs.r[6] >= INT_MIN);
+      assert(regs.r[6] <= INT_MAX);
+      *mode = (int)regs.r[6];
+    }
   }
   else
   {
