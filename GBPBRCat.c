@@ -23,6 +23,8 @@
   CJB: 21-Apr-16: Modified format strings to avoid GNU C compiler warnings.
   CJB: 07-May-25: Dogfooding the _Optional qualifier.
   CJB: 11-May-26: Use PRIdPTR to print results from _kernel_osgbpb.
+  CJB: 14-May-26: Limit buffer size and explicitly convert it from size_t to
+                  intptr_t.
  */
 
 /* ISO library headers */
@@ -56,6 +58,11 @@ _Optional _kernel_oserror *os_gbpb_read_cat_no_path(const char *f, void *buffer,
   assert(n != NULL);
   assert(pos != NULL);
 
+  if (buff_size > (uintptr_t)INTPTR_MAX)
+  {
+    buff_size = (uintptr_t)INTPTR_MAX;
+  }
+
   DEBUGF("GBPBRCat: about to read %u catalogue entries for directory '%s' "
          "at position %d with pattern '%s'\n", *n, f, *pos, pattern ? pattern : "");
 
@@ -64,7 +71,8 @@ _Optional _kernel_oserror *os_gbpb_read_cat_no_path(const char *f, void *buffer,
   gbpb_params.dataptr = buffer;
   gbpb_params.nbytes = *n;
   gbpb_params.fileptr = *pos;
-  gbpb_params.buf_len = buff_size;
+  assert(buff_size <= (uintptr_t)INTPTR_MAX);
+  gbpb_params.buf_len = (intptr_t)buff_size;
   gbpb_params.wild_fld = pattern ? (char *)pattern : 0; /* may be null */
 
   /* Disgusting type-cast from string pointer to integer (thanks, Acorn).
