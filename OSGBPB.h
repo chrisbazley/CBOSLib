@@ -17,7 +17,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-/* OSFSCntrl.h currently declares one function to canonicalise file paths.
+/* OSGBPB.h currently declares one function to read catalogue information.
 
 Dependencies: Acorn library kernel.
 Message tokens: None.
@@ -25,6 +25,8 @@ History:
   CJB: 23-Nov-14: Created this header file.
   CJB: 11-Dec-20: Remove redundant uses of the 'extern' keyword.
   CJB: 07-May-25: Dogfooding the _Optional qualifier.
+  CJB: 15-May-26: Allow the buffer argument to be null. Use size_t for the
+                  number of objects for which to read catalogue info.
 */
 
 #ifndef OSGBPB_h
@@ -56,21 +58,24 @@ enum
 typedef struct
 {
   OS_File_CatalogueInfo info;
-  char name[];      /* Variable-length buffer for nul-terminated leaf name. */
-}
-OS_GBPB_CatalogueInfo;
+  char name[]; /* Variable-length buffer for nul-terminated leaf name. */
+} OS_GBPB_CatalogueInfo;
 
-_Optional _kernel_oserror *os_gbpb_read_cat_no_path(const char */*f*/, void */*buffer*/, size_t /*buff_size*/, unsigned int */*n*/, int */*pos*/, _Optional const char */*pattern*/);
-   /*
-    * Reads catalogue information for up to 'n' objects from the directory
-    * named 'f', starting at 'pos' (or OS_GBPB_ReadCat_PositionStart for
-    * the first call). Upon return from this function, 'n' and 'pos' are
-    * updated to reflect the number of objects actually read and the
-    * position from which to continue reading (or OS_GBPB_ReadCat_PositionEnd
-    * if there are no more matching catalogue entries). Only objects with
-    * names that match the wildcarded string 'pattern' will be included.
-    * If 'pattern' is a null pointer or "*" then all names will match.
-    * Returns: a pointer to an OS error block, or else NULL for success.
-    */
+_Optional _kernel_oserror *
+os_gbpb_read_cat_no_path(const char * /*f*/, _Optional void * /*buffer*/,
+                         size_t /*buff_size*/, size_t * /*n*/, int * /*pos*/,
+                         _Optional const char * /*pattern*/);
+/*
+ * Reads catalogue information for up to 'n' objects from the directory
+ * named 'f', starting at 'pos' (or OS_GBPB_ReadCat_PositionStart for
+ * the first call). Upon return from this function, 'n' and 'pos' are
+ * updated to reflect the number of objects actually read and the
+ * position from which to continue reading (or OS_GBPB_ReadCat_PositionEnd
+ * if there are no more matching catalogue entries). Only objects with
+ * names that match the wildcarded string 'pattern' will be included.
+ * If 'pattern' is a null pointer or "*" then all names will match.
+ * If 'buffer' is a null pointer then it is as if 'buff_size' were 0.
+ * Returns: a pointer to an OS error block, or else NULL for success.
+ */
 
 #endif

@@ -25,10 +25,14 @@
   CJB: 11-May-26: Use PRIdPTR to print results from _kernel_osgbpb.
   CJB: 14-May-26: Limit buffer size and explicitly convert it from size_t to
                   intptr_t.
+  CJB: 15-May-26: Allow the buffer argument to be null. Use size_t for the
+                  number of objects for which to read catalogue info.
+                  More explicit conversions checked by assertions.
  */
 
 /* ISO library headers */
 #include <inttypes.h>
+#include <limits.h>
 #include <stddef.h>
 
 /* Acorn C/C++ library headers */
@@ -48,47 +52,66 @@ enum
 /* ----------------------------------------------------------------------- */
 /*                         Public functions                                */
 
-_Optional _kernel_oserror *os_gbpb_read_cat_no_path(const char *f, void *buffer, size_t buff_size, unsigned int *n, int *pos, _Optional const char *pattern)
+_Optional _kernel_oserror *
+os_gbpb_read_cat_no_path(const char *f, _Optional void *buffer,
+                         size_t buff_size, size_t *n, int *pos,
+                         _Optional const char *pattern)
 {
   _Optional _kernel_oserror *e;
-  _kernel_osgbpb_block gbpb_params;
 
   assert(f != NULL);
-  assert(buffer != NULL || buff_size == 0);
   assert(n != NULL);
   assert(pos != NULL);
 
-  if (buff_size > (uintptr_t)INTPTR_MAX)
+  if (buffer == NULL)
+  {
+    buff_size = 0;
+  }
+  else if (buff_size > (uintptr_t)INTPTR_MAX)
   {
     buff_size = (uintptr_t)INTPTR_MAX;
   }
 
-  DEBUGF("GBPBRCat: about to read %u catalogue entries for directory '%s' "
-         "at position %d with pattern '%s'\n", *n, f, *pos, pattern ? pattern : "");
+  DEBUGF("GBPBRCat: about to read %zu catalogue entries for directory '%s' "
+         "at position %d with pattern '%s'\n",
+         *n, f, *pos, pattern ? pattern : "");
 
   DEBUGF("GBPBRCat: output buffer is %p of size %zu\n", buffer, buff_size);
 
-  gbpb_params.dataptr = buffer;
-  gbpb_params.nbytes = *n;
-  gbpb_params.fileptr = *pos;
+  assert(*n < INTPTR_MAX);
   assert(buff_size <= (uintptr_t)INTPTR_MAX);
-  gbpb_params.buf_len = (intptr_t)buff_size;
-  gbpb_params.wild_fld = pattern ? (char *)pattern : 0; /* may be null */
+
+  _kernel_osgbpb_block gbpb_params = {
+    .dataptr = buffer,
+    .nbytes = (intptr_t)*n,
+    .fileptr = *pos,
+    .buf_len = (intptr_t)buff_size,
+    .wild_fld = pattern ? (char *)pattern : 0, /* may be null */
+  };
 
   /* Disgusting type-cast from string pointer to integer (thanks, Acorn).
      Note that _kernel_osgbpb even updates 'gbpb_params' on error. */
-  if (_kernel_osgbpb(OS_GBPB_ReadEntriesAndFileInfoFromDir,
-                     (uintptr_t)f,
-                     &gbpb_params) == _kernel_ERROR) {
+  if (_kernel_osgbpb(OS_GBPB_ReadEntriesAndFileInfoFromDir, (uintptr_t)f,
+                     &gbpb_params) == _kernel_ERROR)
+  {
     e = _kernel_last_oserror();
     assert(e != NULL);
-    DEBUGF("GBPBRCat: _kernel_osgbpb set error %d:%s\n",
-           e->errnum, e->errmess);
-  } else {
-    DEBUGF("GBPBRCat: %" PRIdPTR " entries were read and new offset is %" PRIdPTR "\n",
+    DEBUGF("GBPBRCat: _kernel_osgbpb set error %d:%s\n", e->errnum, e->errmess);
+  }
+  else
+  {
+    DEBUGF("GBPBRCat: %" PRIdPTR
+           " entries were read and new offset is %" PRIdPTR "\n",
            gbpb_params.nbytes, gbpb_params.fileptr);
-    *pos = gbpb_params.fileptr;
-    *n = gbpb_params.nbytes;
+
+    assert(gbpb_params.fileptr >= INT_MIN);
+    assert(gbpb_params.fileptr <= INT_MAX);
+    *pos = (int)gbpb_params.fileptr;
+
+    assert(gbpb_params.nbytes >= 0);
+    assert((uintptr_t)gbpb_params.nbytes <= SIZE_MAX);
+    *n = (size_t)gbpb_params.nbytes;
+
     e = NULL;
   }
   return e;
