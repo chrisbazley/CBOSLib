@@ -21,6 +21,7 @@
   CJB: 23-Nov-14: Created this source file
   CJB: 18-Apr-15: Assertions are now provided by debug.h.
   CJB: 07-May-25: Dogfooding the _Optional qualifier.
+  CJB: 15-May-26: Explicitly convert the attributes to unsigned.
  */
 
 /* ISO library headers */
@@ -63,7 +64,7 @@ _Optional _kernel_oserror *os_file_read_cat_no_path(const char *f, OS_File_Catal
     catalogue_entry->load = kosfb.load;
     catalogue_entry->exec = kosfb.exec;
     catalogue_entry->length = kosfb.start;
-    catalogue_entry->attributes = kosfb.end;
+    catalogue_entry->attributes = (unsigned)kosfb.end;
   }
 
   return e;
