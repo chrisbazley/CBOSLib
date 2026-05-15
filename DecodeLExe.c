@@ -20,10 +20,13 @@
 /* History:
   CJB: 08-Apr-12: Created this source file.
   CJB: 10-May-25: Make the output of decode_load_exec optional.
+  CJB: 15-May-26: Use intptr_t instead of int for addresses.
  */
 
 /* ISO library headers */
 #include <string.h>
+#include <inttypes.h>
+#include <limits.h>
 
 /* Local headers */
 #include "Internal/CBOSMisc.h"
@@ -40,24 +43,26 @@ enum
   LoadAddressStampShift   = 0
 };
 
-int decode_load_exec(int load, int exec, _Optional OS_DateAndTime *time)
+int decode_load_exec(intptr_t load, intptr_t exec, _Optional OS_DateAndTime *time)
 {
   int file_type;
-  const int has_type = (load >> LoadAddressHasTypeShift) &
-                       LoadAddressHasTypeMask;
+  const uintptr_t has_type = ((uintptr_t)load >> LoadAddressHasTypeShift) &
+                             LoadAddressHasTypeMask;
 
   if (has_type == LoadAddressHasTypeMask)
   {
     /* Object has date stamp and file type */
-    file_type = (load >> LoadAddressTypeShift) & LoadAddressTypeMask;
-    DEBUGF("DateStamp: File's type is 0x%x\n", file_type);
+    const uintptr_t type_bits = ((uintptr_t)load >> LoadAddressTypeShift) & LoadAddressTypeMask;
+    DEBUGF("DateStamp: File's type is 0x%" PRIxPTR "\n", type_bits);
+    assert(type_bits <= (unsigned)INT_MAX);
+    file_type = (int)type_bits;
 
     if (time != NULL)
     {
-      const int st = (load >> LoadAddressStampShift) & LoadAddressStampMask;
+      const uintptr_t stamp_bits = ((uintptr_t)load >> LoadAddressStampShift) & LoadAddressStampMask;
       memcpy(&time->bytes, &exec, 4);
-      time->bytes[4] = st;
-      DEBUGF("DateStamp: File's date stamp is 0x%2x%8x\n", st, exec);
+      time->bytes[4] = stamp_bits;
+      DEBUGF("DateStamp: File's date stamp is 0x%2" PRIxPTR "%8" PRIxPTR "\n", stamp_bits, exec);
     }
   }
   else
@@ -66,8 +71,9 @@ int decode_load_exec(int load, int exec, _Optional OS_DateAndTime *time)
     file_type = FileType_None; /* unlike OS_FSControl 38 */
 
     if (time != NULL)
+    {
       memset(time, 0, sizeof(time->bytes));
-
+    }
     DEBUGF("DateStamp: File is untyped\n");
   }
 

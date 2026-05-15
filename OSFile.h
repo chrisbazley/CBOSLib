@@ -30,6 +30,7 @@ History:
   CJB: 07-May-25: Dogfooding the _Optional qualifier.
   CJB: 10-May-25: Make the output of decode_load_exec optional.
                   os_file_generate_error shouldn't return pointer to optional.
+  CJB: 15-May-26: Use intptr_t instead of int for addresses.
 */
 
 #ifndef OSFile_h
@@ -37,6 +38,7 @@ History:
 
 /* ISO library headers */
 #include <stddef.h>
+#include <stdint.h>
 
 /* Acorn C/C++ library headers */
 #include "kernel.h"
@@ -76,9 +78,9 @@ enum
 /* Catalogue information for a filing system object. */
 typedef struct
 {
-  int load;                /* Load address of untyped file or file type and high byte
+  intptr_t load;           /* Load address of untyped file or file type and high byte
                               of date stamp */
-  int exec;                /* Execution address of untyped file or low bytes of
+  intptr_t exec;           /* Execution address of untyped file or low bytes of
                               date stamp */
   long int length;         /* Length of the file, in bytes.
                               Type is intended to match ftell and fseek. */
@@ -87,7 +89,7 @@ typedef struct
 }
 OS_File_CatalogueInfo;
 
-int decode_load_exec(int /*load*/, int /*exec*/, _Optional OS_DateAndTime * /*time*/ );
+int decode_load_exec(intptr_t /*load*/, intptr_t /*exec*/, _Optional OS_DateAndTime * /*time*/ );
    /*
     * Decodes an filing system object's load and execution addresses (e.g. from
     * a _kernel_osfile_block) to determine whether it has a date stamp and file
