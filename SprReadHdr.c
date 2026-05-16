@@ -26,6 +26,7 @@
 
 /* ISO library headers */
 #include <stdint.h>
+#include <limits.h>
 
 /* Acorn C/C++ library headers */
 #include "kernel.h"
