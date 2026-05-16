@@ -22,10 +22,14 @@
   CJB: 18-Apr-15: Assertions are now provided by debug.h.
   CJB: 07-May-25: Dogfooding the _Optional qualifier.
   CJB: 15-May-26: Explicitly convert the attributes to unsigned.
+  CJB: 16-May-26: Assert that the file attributes and length are
+                  representable before explicitly converting their
+                  types.
  */
 
 /* ISO library headers */
 #include <stddef.h>
+#include <limits.h>
 
 /* Acorn C/C++ library headers */
 #include "kernel.h"
@@ -63,7 +67,13 @@ _Optional _kernel_oserror *os_file_read_cat_no_path(const char *f, OS_File_Catal
     e = NULL;
     catalogue_entry->load = kosfb.load;
     catalogue_entry->exec = kosfb.exec;
-    catalogue_entry->length = kosfb.start;
+
+    assert(kosfb.start >= LONG_MIN);
+    assert(kosfb.start <= LONG_MAX);
+    catalogue_entry->length = (long)kosfb.start;
+
+    assert(kosfb.end >= UINT_MIN);
+    assert(kosfb.end <= UINT_MAX);
     catalogue_entry->attributes = (unsigned)kosfb.end;
   }
 
