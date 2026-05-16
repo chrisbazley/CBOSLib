@@ -72,8 +72,7 @@ _Optional _kernel_oserror *os_file_read_cat_no_path(const char *f, OS_File_Catal
     assert(kosfb.start <= LONG_MAX);
     catalogue_entry->length = (long)kosfb.start;
 
-    assert(kosfb.end >= UINT_MIN);
-    assert(kosfb.end <= UINT_MAX);
+    assert((uintptr_t)kosfb.end <= UINT_MAX);
     catalogue_entry->attributes = (unsigned)kosfb.end;
   }
 
