@@ -20,6 +20,8 @@
 /* History:
   CJB: 16-Mar-19: Created this source file.
   CJB: 07-May-25: Dogfooding the _Optional qualifier.
+  CJB: 16-May-26: Assert that SWI's return values are within range for
+                  type int and explicity convert them to that type.
 */
 
 /* ISO library headers */
@@ -48,10 +50,21 @@ _Optional _kernel_oserror *os_sprite_op_read_header(SpriteAreaHeader *const area
   _Optional _kernel_oserror *const e = _kernel_swi(OS_SpriteOp, &regs, &regs);
   if (e == NULL)
   {
-    hdr->size = regs.r[2];
-    hdr->sprite_count = regs.r[3];
-    hdr->first = regs.r[4];
-    hdr->used = regs.r[5];
+    assert(regs.r[2] >= INT_MIN);
+    assert(regs.r[2] <= INT_MAX);
+    hdr->size = (int)regs.r[2];
+
+    assert(regs.r[3] >= INT_MIN);
+    assert(regs.r[3] <= INT_MAX);
+    hdr->sprite_count = (int)regs.r[3];
+
+    assert(regs.r[4] >= INT_MIN);
+    assert(regs.r[4] <= INT_MAX);
+    hdr->first = (int)regs.r[4];
+
+    assert(regs.r[5] >= INT_MIN);
+    assert(regs.r[5] <= INT_MAX);
+    hdr->used = (int)regs.r[5];
 
     DEBUGF("SprReadHdr: size %d, count %d, first %d, used %d\n",
            hdr->size, hdr->sprite_count, hdr->first, hdr->used);
