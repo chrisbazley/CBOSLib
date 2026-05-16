@@ -21,6 +21,8 @@
   CJB: 08-Apr-12: Created this source file.
   CJB: 10-May-25: Make the output of decode_load_exec optional.
   CJB: 15-May-26: Use intptr_t instead of int for addresses.
+  CJB: 16-May-26: Cast the top byte of the timestamp to type uint8_t
+                  on assignment to suppress a warning.
  */
 
 /* ISO library headers */
@@ -61,7 +63,7 @@ int decode_load_exec(intptr_t load, intptr_t exec, _Optional OS_DateAndTime *tim
     {
       const uintptr_t stamp_bits = ((uintptr_t)load >> LoadAddressStampShift) & LoadAddressStampMask;
       memcpy(&time->bytes, &exec, 4);
-      time->bytes[4] = stamp_bits;
+      time->bytes[4] = (uint8_t)stamp_bits;
       DEBUGF("DateStamp: File's date stamp is 0x%2" PRIxPTR "%8" PRIxPTR "\n", stamp_bits, exec);
     }
   }
