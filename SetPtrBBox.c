@@ -19,6 +19,7 @@
 
 /* History:
   CJB: 07-May-25: Dogfooding the _Optional qualifier.
+  CJB: 16-May-26: Add casts to suppress compiler warnings.
  */
 
 /* ISO library headers */
@@ -53,14 +54,14 @@ _Optional _kernel_oserror *os_word_set_pointer_bbox(const BBox *const bbox)
 
   unsigned char bounding_box[9] = {
     SetPointerBBox,
-    bbox->xmin,
-    bbox->xmin >> CHAR_BIT,
-    bbox->ymin,
-    bbox->ymin >> CHAR_BIT,
-    bbox->xmax,
-    bbox->xmax >> CHAR_BIT,
-    bbox->ymax,
-    bbox->ymax >> CHAR_BIT
+    (unsigned char)bbox->xmin,
+    (unsigned char)((unsigned int)bbox->xmin >> CHAR_BIT),
+    (unsigned char)bbox->ymin,
+    (unsigned char)((unsigned int)bbox->ymin >> CHAR_BIT),
+    (unsigned char)bbox->xmax,
+    (unsigned char)((unsigned int)bbox->xmax >> CHAR_BIT),
+    (unsigned char)bbox->ymax,
+    (unsigned char)((unsigned int)bbox->ymax >> CHAR_BIT)
   };
 
   if (_kernel_osword(OS_Word_PointerOp, (int *)bounding_box) == _kernel_ERROR)
