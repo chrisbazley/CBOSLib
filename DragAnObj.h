@@ -25,6 +25,9 @@ History:
   CJB: 30-Nov-15: Created this header file.
   CJB: 11-Dec-20: Remove redundant uses of the 'extern' keyword.
   CJB: 07-May-25: Dogfooding the _Optional qualifier.
+  CJB: 17-May-26: Use type intptr_t instead of int for the address of the
+                  of the renderer function and for its parameter values
+                  (for portability).
 */
 
 #ifndef DragAnObj_h
@@ -32,6 +35,7 @@ History:
 
 /* ISO library headers */
 #include <stddef.h>
+#include <stdint.h>
 
 /* Acorn C/C++ library headers */
 #include "kernel.h"
@@ -58,8 +62,8 @@ History:
 #define DragAnObject_RenderSVC     (1u << 17)
 
 _Optional _kernel_oserror *drag_an_object_start(unsigned int /*flags*/,
-                                                int /*renderer*/,
-                                                const int */*renderer_args*/,
+                                                intptr_t /*renderer*/,
+                                                const intptr_t */*renderer_args*/,
                                                 const BBox */*drag_box*/,
                                                 const BBox */*parent_box*/);
    /*

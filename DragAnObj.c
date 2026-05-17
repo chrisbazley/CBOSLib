@@ -20,25 +20,32 @@
 /* History:
   CJB: 30-Nov-15: Created this source file.
   CJB: 07-May-25: Dogfooding the _Optional qualifier.
+  CJB: 17-May-26: Use type intptr_t instead of int for the address of the
+                  of the renderer function and for its parameter values
+                  (for portability).
 */
 
 /* ISO library headers */
-#include <stdint.h>
+#include <inttypes.h>
 #include <stddef.h>
 
 /* Acorn C/C++ library headers */
 #include "kernel.h"
-#include "wimp.h"
 #include "swis.h"
+#include "wimp.h"
 
 /* Local headers */
-#include "Internal/CBOSMisc.h"
 #include "DragAnObj.h"
+#include "Internal/CBOSMisc.h"
 
 /* ----------------------------------------------------------------------- */
 /*                         Public functions                                */
 
-_Optional _kernel_oserror *drag_an_object_start(unsigned int flags, int renderer, const int *renderer_args, const BBox *drag_box, const BBox *parent_box)
+_Optional _kernel_oserror *drag_an_object_start(unsigned int flags,
+                                                intptr_t renderer,
+                                                const intptr_t *renderer_args,
+                                                const BBox *drag_box,
+                                                const BBox *parent_box)
 {
   _Optional _kernel_oserror *e = NULL;
   _kernel_swi_regs regs;
@@ -46,17 +53,18 @@ _Optional _kernel_oserror *drag_an_object_start(unsigned int flags, int renderer
   assert(renderer_args != NULL);
   assert(drag_box != NULL);
 
-  DEBUGF("DragAnObj: Calling DragAnObject_Start with flags 0x%x, renderer 0x%x, "
-         "renderer args {0x%x,0x%x,0x%x,0x%x}, drag box {%d,%d,%d,%d}\n",
-         flags, renderer,
-         renderer_args[0], renderer_args[1], renderer_args[2], renderer_args[3],
-         drag_box->xmin, drag_box->ymin, drag_box->xmax, drag_box->ymax);
+  DEBUGF("DragAnObj: Calling DragAnObject_Start with flags 0x%x, renderer "
+         "0x%" PRIxPTR ", renderer args {0x%" PRIxPTR ",0x%" PRIxPTR
+         ",0x%" PRIxPTR ",0x%" PRIxPTR "}, drag box {%d,%d,%d,%d}\n",
+         flags, renderer, renderer_args[0], renderer_args[1], renderer_args[2],
+         renderer_args[3], drag_box->xmin, drag_box->ymin, drag_box->xmax,
+         drag_box->ymax);
 
   if (flags & DragAnObject_BBox_User)
   {
     assert(parent_box);
-    DEBUGF("DragAnObj: parent box is {%d,%d,%d,%d}\n",
-           parent_box->xmin, parent_box->ymin, parent_box->xmax, parent_box->ymax);
+    DEBUGF("DragAnObj: parent box is {%d,%d,%d,%d}\n", parent_box->xmin,
+           parent_box->ymin, parent_box->xmax, parent_box->ymax);
   }
 
   regs.r[0] = flags;
