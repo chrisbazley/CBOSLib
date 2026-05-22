@@ -20,6 +20,7 @@
 /* History:
   CJB: 16-Mar-19: Created this source file.
   CJB: 07-May-25: Dogfooding the _Optional qualifier.
+  CJB: 22-May-26: Ensure only void * is converted to intptr_t.
 */
 
 /* ISO library headers */
@@ -40,7 +41,7 @@ _Optional _kernel_oserror *os_sprite_op_initialise(SpriteAreaHeader *const area)
 
   _kernel_swi_regs regs;
   regs.r[0] = SPRITEOP_USERAREA_SPRNAME + SPRITEOP_INIT_AREA;
-  regs.r[1] = (intptr_t)area;
+  regs.r[1] = (intptr_t)(void *)area;
 
   return _kernel_swi(OS_SpriteOp, &regs, &regs);
 }

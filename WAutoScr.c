@@ -24,6 +24,7 @@
   CJB: 07-May-25: Dogfooding the _Optional qualifier.
   CJB: 13-May-26: Assert narrow enough status returned by the SWI and
                   explicitly convert it to type unsigned int.
+  CJB: 22-May-26: Ensure only void * is converted to intptr_t.
  */
 
 /* ISO library headers */
@@ -55,7 +56,7 @@ _Optional _kernel_oserror *wimp_auto_scroll(unsigned int const flags,
 
    _kernel_swi_regs regs;
    regs.r[0] = flags;
-   regs.r[1] = (intptr_t)block;
+   regs.r[1] = (intptr_t)(void *)block;
 
   _Optional _kernel_oserror *const e = _kernel_swi(Wimp_AutoScroll, &regs, &regs);
   if (e)

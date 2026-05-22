@@ -25,6 +25,7 @@
   CJB: 07-May-25: Dogfooding the _Optional qualifier.
   CJB: 13-May-26: Use type intptr_t for VDU variable values because some
                   values are addresses.
+  CJB: 22-May-26: Ensure only void * is converted to intptr_t.
 */
 
 /* ISO library headers */
@@ -50,8 +51,8 @@ _Optional _kernel_oserror *os_read_vdu_variables(const VDUVar vars[], intptr_t v
   assert(vars != NULL);
   assert(values != NULL);
 
-  regs.r[0] = (intptr_t)vars;
-  regs.r[1] = (intptr_t)values;
+  regs.r[0] = (intptr_t)(void *)vars;
+  regs.r[1] = (intptr_t)(void *)values;
   e = _kernel_swi(OS_ReadVduVariables, &regs, &regs);
   if (e == NULL)
   {

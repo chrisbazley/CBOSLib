@@ -25,6 +25,7 @@
   CJB: 18-Apr-16: Cast pointer parameters to void * to match %p.
   CJB: 07-May-25: Dogfooding the _Optional qualifier.
   CJB: 12-May-26: Validate and explicitly convert output register values.
+  CJB: 22-May-26: Ensure only void * is converted to intptr_t.
 */
 
 /* ISO library headers */
@@ -54,7 +55,7 @@ _Optional _kernel_oserror *messagetrans_file_info(const char   *filename,
   assert(filename != NULL);
 
   DEBUGF("MTFile: Getting message file info for path '%s'\n", filename);
-  regs.r[1] = (intptr_t)filename;
+  regs.r[1] = (intptr_t)(void *)filename;
   e = _kernel_swi(MessageTrans_FileInfo, &regs, &regs);
   if (e == NULL)
   {
@@ -62,13 +63,13 @@ _Optional _kernel_oserror *messagetrans_file_info(const char   *filename,
     assert((uintptr_t)regs.r[0] <= UINT_MAX);
 
     if (flags != NULL)
-      *flags = (unsigned)regs.r[0];
+      *flags = (unsigned)(uintptr_t)regs.r[0];
 
     assert(regs.r[2] >= 0);
     assert((uintptr_t)regs.r[2] <= SIZE_MAX);
 
     if (buff_size != NULL)
-      *buff_size = (size_t)regs.r[2];
+      *buff_size = (size_t)(uintptr_t)regs.r[2];
   }
   else
   {
@@ -92,9 +93,9 @@ _Optional _kernel_oserror *messagetrans_open_file(MessagesFD     *mfd,
   DEBUGF("MTFile: Opening message file %p at path '%s' with buffer %p\n",
          (void *)mfd, filename, buffer);
 
-  regs.r[0] = (intptr_t)mfd;
-  regs.r[1] = (intptr_t)filename;
-  regs.r[2] = buffer ? (intptr_t)buffer : 0;
+  regs.r[0] = (intptr_t)(void *)mfd;
+  regs.r[1] = (intptr_t)(void *)filename;
+  regs.r[2] = buffer ? (intptr_t)(void *)buffer : 0;
   e = _kernel_swi(MessageTrans_OpenFile, &regs, &regs);
   if (e != NULL)
   {
@@ -113,7 +114,7 @@ _Optional _kernel_oserror *messagetrans_close_file(MessagesFD *mfd)
   assert(mfd != NULL);
 
   DEBUGF("MTFile: Closing message file %p\n", (void *)mfd);
-  regs.r[0] = (intptr_t)mfd;
+  regs.r[0] = (intptr_t)(void *)mfd;
   e = _kernel_swi(MessageTrans_CloseFile, &regs, &regs);
   if (e != NULL)
   {

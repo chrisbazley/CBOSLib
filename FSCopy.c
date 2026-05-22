@@ -20,6 +20,7 @@
 /* History:
   CJB: 14-Mar-19: Created this source file
   CJB: 07-May-25: Dogfooding the _Optional qualifier.
+  CJB: 22-May-26: Ensure only void * is converted to intptr_t.
  */
 
 /* ISO library headers */
@@ -51,8 +52,8 @@ _Optional _kernel_oserror *os_fscontrol_copy(const char *src,
 
   _kernel_swi_regs regs;
   regs.r[0] = FSControl_CopyObjects;
-  regs.r[1] = (intptr_t)src;
-  regs.r[2] = (intptr_t)dst;
+  regs.r[1] = (intptr_t)(void *)src;
+  regs.r[2] = (intptr_t)(void *)dst;
   regs.r[3] = (intptr_t)flags;
   _Optional _kernel_oserror *const e = _kernel_swi(OS_FSControl, &regs, &regs);
 

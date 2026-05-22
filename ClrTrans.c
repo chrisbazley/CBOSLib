@@ -26,6 +26,7 @@
   CJB: 07-May-25: Dogfooding the _Optional qualifier.
   CJB: 12-May-26: Make mixed-signedness buffer size calculations warning-free
                   and hopefully more robust.
+  CJB: 22-May-26: Ensure only void * is converted to intptr_t.
 */
 
 /* ISO library headers */
@@ -82,7 +83,7 @@ colourtrans_read_palette(unsigned int flags, const ColourTransContext *source,
 
   /* Find buffer size and/or read palette into caller's buffer */
   regs.r[2] = buffer ? (intptr_t)buffer : 0;
-  regs.r[3] = buff_size > INTPTR_MAX ? INTPTR_MAX : (intptr_t)buff_size;
+  regs.r[3] = (intptr_t)buff_size;
   regs.r[4] = flags;
   DEBUGF("ClrTrans: Calling ColourTrans_ReadPalette with "
          "0x%" PRIxPTR ",0x%" PRIxPTR ",0x%" PRIxPTR ",0x%" PRIxPTR
@@ -139,8 +140,8 @@ _Optional _kernel_oserror *colourtrans_generate_table(
 
   regs.r[4] = 0; /* return required buffer size */
   regs.r[5] = flags;
-  regs.r[6] = (intptr_t)block->workspace;
-  regs.r[7] = (intptr_t)block->transfer;
+  regs.r[6] = (intptr_t)(void *)block->workspace;
+  regs.r[7] = (intptr_t)(void *)block->transfer;
   DEBUGF("ClrTrans: Calling ColourTrans_GenerateTable with "
          "0x%" PRIxPTR ",0x%" PRIxPTR ",0x%" PRIxPTR ",0x%" PRIxPTR
          ",0x%" PRIxPTR ",0x%" PRIxPTR ",0x%" PRIxPTR ",0x%" PRIxPTR "\n",
@@ -174,7 +175,7 @@ _Optional _kernel_oserror *colourtrans_generate_table(
       {
         /* Generate the colour translation table.
            R0-R3 and R5-R7 should have been preserved by the earlier SWI. */
-        regs.r[4] = (intptr_t)buffer;
+        regs.r[4] = (intptr_t)(void *)buffer;
         DEBUGF("ClrTrans: Calling ColourTrans_GenerateTable with "
                "0x%" PRIxPTR ",0x%" PRIxPTR ",0x%" PRIxPTR ",0x%" PRIxPTR
                ",0x%" PRIxPTR ",0x%" PRIxPTR ",0x%" PRIxPTR ",0x%" PRIxPTR "\n",
@@ -208,7 +209,7 @@ static void assign_regs(intptr_t regs[], const ColourTransContext *context)
   if (context->type == ColourTransContextType_Screen)
   {
     regs[0] = context->data.screen.mode;
-    regs[1] = (intptr_t)context->data.screen.palette;
+    regs[1] = (intptr_t)(void *)context->data.screen.palette;
 
     /* Actual determinant of context type for SWI is the value of R0 */
     assert(regs[0] < SpriteAreaPointerThreshold);
@@ -216,8 +217,8 @@ static void assign_regs(intptr_t regs[], const ColourTransContext *context)
   else
   {
     assert(context->type == ColourTransContextType_Sprite);
-    regs[0] = (intptr_t)context->data.sprite.sprite_area;
-    regs[1] = (intptr_t)context->data.sprite.name_or_pointer;
+    regs[0] = (intptr_t)(void *)context->data.sprite.sprite_area;
+    regs[1] = (intptr_t)(void *)context->data.sprite.name_or_pointer;
 
     /* Actual determinant of context type for SWI is the value of R0 */
     assert(regs[0] >= SpriteAreaPointerThreshold);

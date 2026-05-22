@@ -20,6 +20,7 @@
 /* History:
   CJB: 30-Oct-21: Created this source file.
   CJB: 07-May-25: Dogfooding the _Optional qualifier.
+  CJB: 22-May-26: Ensure only void * is converted to intptr_t.
  */
 
 /* ISO library headers */
@@ -60,7 +61,7 @@ _Optional _kernel_oserror *wimp_drag_box2(WimpDragBox *const block,
          flags);
 
    _kernel_swi_regs regs;
-   regs.r[1] = (intptr_t)block;
+   regs.r[1] = (intptr_t)(void *)block;
    regs.r[2] = MagicWord;
    regs.r[3] = flags;
 

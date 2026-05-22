@@ -23,6 +23,7 @@
   CJB: 17-May-26: Use type intptr_t instead of int for the address of the
                   of the renderer function and for its parameter values
                   (for portability).
+  CJB: 22-May-26: Ensure only void * is converted to intptr_t.
 */
 
 /* ISO library headers */
@@ -69,9 +70,9 @@ _Optional _kernel_oserror *drag_an_object_start(unsigned int flags,
 
   regs.r[0] = flags;
   regs.r[1] = renderer;
-  regs.r[2] = (intptr_t)renderer_args;
-  regs.r[3] = (intptr_t)drag_box;
-  regs.r[4] = (intptr_t)parent_box;
+  regs.r[2] = (intptr_t)(void *)renderer_args;
+  regs.r[3] = (intptr_t)(void *)drag_box;
+  regs.r[4] = (intptr_t)(void *)parent_box;
   e = _kernel_swi(DragAnObject_Start, &regs, &regs);
   if (e != NULL)
   {

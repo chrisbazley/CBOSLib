@@ -21,6 +21,7 @@
   CJB: 16-Mar-19: Created this source file.
   CJB: 07-May-25: Dogfooding the _Optional qualifier.
   CJB: 11-May-26: Use intptr_t for reason in SpriteRestoreOutputBlock.
+  CJB: 22-May-26: Ensure only void * is converted to intptr_t.
 */
 
 /* ISO library headers */
@@ -61,8 +62,8 @@ static _Optional _kernel_oserror *switch_output_common(SpriteAreaHeader *const a
   /* Find the buffer size required for the save area */
   _kernel_swi_regs regs;
   regs.r[0] = SPRITEOP_USERAREA_SPRNAME + SPRITEOP_READ_SAVE_AREA_SIZE;
-  regs.r[1] = (intptr_t)area;
-  regs.r[2] = name ? (intptr_t)name : 0;
+  regs.r[1] = (intptr_t)(void *)area;
+  regs.r[2] = name ? (intptr_t)(void *)name : 0;
 
   _Optional _kernel_oserror *e = _kernel_swi(OS_SpriteOp, &regs, &regs);
 
@@ -92,9 +93,9 @@ static _Optional _kernel_oserror *switch_output_common(SpriteAreaHeader *const a
         assert(buffer != NULL);
         regs.r[0] = reason + (area ? SPRITEOP_USERAREA_SPRNAME :
                                      SPRITEOP_SYSTEMAREA);
-        regs.r[1] = (intptr_t)area;
+        regs.r[1] = (intptr_t)(void *)area;
         regs.r[2] = name ? (intptr_t)name : 0;
-        regs.r[3] = (intptr_t)buffer;
+        regs.r[3] = (intptr_t)(void *)buffer;
         e = _kernel_swi(OS_SpriteOp, &regs, &regs);
         if (e != NULL)
         {

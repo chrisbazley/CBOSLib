@@ -30,6 +30,7 @@
   CJB: 29-Aug-22: Use size_t rather than unsigned int for nparam.
   CJB: 07-May-25: Dogfooding the _Optional qualifier.
   CJB: 12-May-26: Handle mixed-signedness calculations more carefully.
+  CJB: 22-May-26: Ensure only void * is converted to intptr_t.
 */
 
 /* ISO library headers */
@@ -105,7 +106,7 @@ _Optional _kernel_oserror *messagetrans_vlookup(_Optional MessagesFD   *mfd,
 
   _kernel_swi_regs regs = {
     .r = {
-      mfd ? (intptr_t)mfd : 0
+      mfd ? (intptr_t)(void *)mfd : 0
     }
   };
 
@@ -116,7 +117,7 @@ _Optional _kernel_oserror *messagetrans_vlookup(_Optional MessagesFD   *mfd,
     {
       char *const param = va_arg(params, char *);
       DEBUGF("MTLookup: parameter %zu is '%s'\n", p, param ? param : "");
-      regs.r[4 + p] = param ? (intptr_t)param : 0;
+      regs.r[4 + p] = param ? (intptr_t)(void *)param : 0;
     }
   }
 
@@ -125,8 +126,8 @@ _Optional _kernel_oserror *messagetrans_vlookup(_Optional MessagesFD   *mfd,
     /* Find the buffer size required for the output */
     char dummy[1];
 
-    regs.r[1] = (intptr_t)token;
-    regs.r[2] = (intptr_t)dummy; /* in case buffer == NULL */
+    regs.r[1] = (intptr_t)(void *)token;
+    regs.r[2] = (intptr_t)(void *)dummy; /* in case buffer == NULL */
     regs.r[3] = 0; /* size of buffer */
     e = _kernel_swi(MessageTrans_Lookup, &regs, &regs);
     if (e == NULL)
@@ -158,8 +159,8 @@ _Optional _kernel_oserror *messagetrans_vlookup(_Optional MessagesFD   *mfd,
 
     /* Generate the output string.
        R0 and R4-R7 should have been preserved by the earlier SWI. */
-    regs.r[1] = (intptr_t)token;
-    regs.r[2] = buffer ? (intptr_t)buffer : 0;
+    regs.r[1] = (intptr_t)(void *)token;
+    regs.r[2] = buffer ? (intptr_t)(void *)buffer : 0;
     assert(buff_size <= (uintptr_t)INTPTR_MAX);
     regs.r[3] = (intptr_t)buff_size;
     e = _kernel_swi(MessageTrans_Lookup, &regs, &regs);
