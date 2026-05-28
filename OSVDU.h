@@ -29,6 +29,8 @@ History:
   CJB: 07-May-25: Dogfooding the _Optional qualifier.
   CJB: 13-May-26: Use type intptr_t for VDU variable values because some
                   values are addresses.
+  CJB: 28-May-26: Combine the two anonymous enums used to define
+                  GCOLAction values to avoid compiler warnings.
 */
 
 #ifndef OSVDU_h
@@ -54,12 +56,9 @@ enum
   GCOLAction_ColourPattern2 = 32,
   GCOLAction_ColourPattern3 = 48,
   GCOLAction_ColourPattern4 = 64,
-  GCOLAction_GiantPattern   = 80  /* Patterns 1 to 4 placed side by side */
-};
+  GCOLAction_GiantPattern   = 80, /* Patterns 1 to 4 placed side by side */
 
-/* Add one of the following values to the GCOL action */
-enum
-{
+  /* Add one of the following values to the GCOL action */
   GCOLAction_Overwrite,
   GCOLAction_Or,
   GCOLAction_And,
