@@ -32,11 +32,6 @@ target_include_directories(CBOS PUBLIC .)
 
 target_compile_definitions(CBOS PRIVATE
     $<$<CONFIG:Debug>:DEBUG_OUTPUT>
-    $<$<CONFIG:Release>:NDEBUG>
-)
-
-target_compile_options(CBOS PRIVATE
-    $<$<CONFIG:Release>:-O3>
 )
 
 # Header files depend on definitions from this dependency
