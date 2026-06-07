@@ -31,6 +31,10 @@ History:
                   values are addresses.
   CJB: 28-May-26: Combine the two anonymous enums used to define
                   GCOLAction values to avoid compiler warnings.
+  CJB: 07-Jun-26: Duplicate all of the mode variable numbers in the VDU
+                  variable enumeration to placate clang-tidy.
+                  Combine the two anonymous enums used to define
+                  PlotOp values to avoid compiler warnings.
 */
 
 #ifndef OSVDU_h
@@ -103,25 +107,19 @@ enum
   PlotOp_ReservedAcorn2      = 224,
   PlotOp_Sprite              = 232,
   PlotOp_ReservedUser1       = 240,
-  PlotOp_ReservedUser2       = 248
-};
+  PlotOp_ReservedUser2       = 248,
 
-/* Add one of the following values to the os_plot command code */
-enum
-{
-  PlotOp_MoveRel,
+  /* Add one of the following values to the os_plot command code */
+  PlotOp_MoveRel = 0,
   PlotOp_PlotFGRel,  /* Do not use with OS_Plot_Block */
   PlotOp_PlotInvRel, /* Do not use with OS_Plot_Block */
   PlotOp_PlotBGRel,  /* Do not use with OS_Plot_Block */
   PlotOp_MoveAbs,
   PlotOp_PlotFGAbs,  /* Do not use with OS_Plot_Block */
   PlotOp_PlotInvAbs, /* Do not use with OS_Plot_Block */
-  PlotOp_PlotBGAbs   /* Do not use with OS_Plot_Block */
-};
+  PlotOp_PlotBGAbs,  /* Do not use with OS_Plot_Block */
 
-/* Add one of the following values to OS_Plot_Block */
-enum
-{
+  /* Add one of the following values to OS_Plot_Block */
   PlotOp_BlockMoveRel = 1,
   PlotOp_BlockCopyRel = 2,
   PlotOp_BlockMoveAbs = 5,
@@ -162,6 +160,19 @@ ModeVar;
 typedef enum
 {
   VDUVar_EndOfList = -1,
+  VDUVar_ModeFlags,
+  VDUVar_ScrRCol,
+  VDUVar_ScrBRow,
+  VDUVar_NColour,
+  VDUVar_XEigFactor,
+  VDUVar_YEigFactor,
+  VDUVar_LineLength,
+  VDUVar_ScreenSize,
+  VDUVar_YShftFactor,
+  VDUVar_Log2BPP,
+  VDUVar_Log2BPC,
+  VDUVar_XWindLimit,
+  VDUVar_YWindLimit,
   VDUVar_GWLCol = 128,
   VDUVar_GWBRow,
   VDUVar_GWRCol,
