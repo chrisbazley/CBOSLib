@@ -53,12 +53,20 @@ History:
                   SPRITEOP_FLIP_Y, SPRITEOP_PLOT_TRANSFORMED_MASK and
                   SPRITEOP_PLOT_TRANSFORMED_SPRITE, as well as flags and
                   structs for transformed sprite plotting.
+  CJB: 20-Jun-26: Use nonstring attribute to suppress GCC warnings about
+                  sprite names.
 */
 #ifndef SprFormats_h
 #define SprFormats_h
 
 /* ISO library headers */
 #include <stdint.h>
+
+#if defined(__GNUC__)
+#define SPRITE_NON_STRING __attribute__((nonstring))
+#else
+#define SPRITE_NON_STRING
+#endif
 
 /* Modifiers for OS_SpriteOp reason code (add one) */
 enum
@@ -173,7 +181,7 @@ SpriteAreaHeader;
 typedef struct
 {
   int size;
-  char name[12];
+  char name[12] SPRITE_NON_STRING;
   int width;
   int height;
   int left_bit;
