@@ -27,6 +27,7 @@ History:
   CJB: 24-Dec-19: Input palette data can now be const.
   CJB: 11-Dec-20: Remove redundant uses of the 'extern' keyword.
   CJB: 13-May-26: Use int instead of unsigned int for component values.
+  CJB: 21-Jun-26: Use uint8_t as the type of PALETTE_GET_RED and friends.
 */
 
 #ifndef PalEntry_h
@@ -53,14 +54,14 @@ enum
 };
 
 /* Macros to extract individual colour components from a palette entry */
-#define PALETTE_GET_RED(palette) ((int)(((palette) & PaletteEntry_RedMask) >> \
-                                        PaletteEntry_RedShift))
+#define PALETTE_GET_RED(palette)                                               \
+  ((uint8_t)(((palette) & PaletteEntry_RedMask) >> PaletteEntry_RedShift))
 
-#define PALETTE_GET_GREEN(palette) ((int)(((palette) & PaletteEntry_GreenMask) >> \
-                                          PaletteEntry_GreenShift))
+#define PALETTE_GET_GREEN(palette)                                             \
+  ((uint8_t)(((palette) & PaletteEntry_GreenMask) >> PaletteEntry_GreenShift))
 
-#define PALETTE_GET_BLUE(palette) ((int)(((palette) & PaletteEntry_BlueMask) >> \
-                                         PaletteEntry_BlueShift))
+#define PALETTE_GET_BLUE(palette)                                              \
+  ((uint8_t)(((palette) & PaletteEntry_BlueMask) >> PaletteEntry_BlueShift))
 
 int palette_entry_brightness(PaletteEntry colour);
    /*
