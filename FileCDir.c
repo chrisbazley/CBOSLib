@@ -21,6 +21,7 @@
   CJB: 08-Nov-14: Created this source file
   CJB: 18-Apr-15: Assertions are now provided by debug.h.
   CJB: 07-May-25: Dogfooding the _Optional qualifier.
+  CJB: 07-Jul-26: Declare _kernel_osfile_block with an initialiser.
  */
 
 /* ISO library headers */
@@ -46,13 +47,12 @@ enum
 _Optional _kernel_oserror *os_file_create_dir(const char *f, int n)
 {
   _Optional _kernel_oserror *e;
-  _kernel_osfile_block kosfb;
 
   assert(f != NULL);
   assert(n >= 0);
   DEBUGF("FileCDir: about to create directory '%s' with %d entries\n", f, n);
 
-  kosfb.start = n;
+  _kernel_osfile_block kosfb = { .start = n };
   if (_kernel_osfile(OS_File_CreateDirectory, f, &kosfb) == _kernel_ERROR) {
     e = _kernel_last_oserror();
     assert(e != NULL);
