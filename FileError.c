@@ -24,6 +24,7 @@
                   ignored to avoid GNU C compiler warnings.
   CJB: 07-May-25: Dogfooding the _Optional qualifier.
   CJB: 10-May-25: os_file_generate_error shouldn't return pointer to optional.
+  CJB: 07-Jul-26: Declare _kernel_osfile_block with an initialiser.
  */
 
 /* ISO library headers */
@@ -48,16 +49,14 @@ enum
 _kernel_oserror *os_file_generate_error(const char *f, int object_type)
 {
   _Optional _kernel_oserror *e;
-  _kernel_osfile_block kosfb;
-  int result;
 
   assert(f != NULL);
   assert(object_type == OS_File_GenerateError_FileNotFound || object_type == OS_File_GenerateError_IsAFile || object_type == OS_File_GenerateError_IsADirectory || object_type == OS_File_GenerateError_DirectoryNotFound);
   DEBUGF("FileError: about to create error for object '%s' of type %d\n",
          f, object_type);
 
-  kosfb.load = object_type;
-  result = _kernel_osfile(OS_File_GenerateError, f, &kosfb);
+  _kernel_osfile_block kosfb = {.load = object_type};
+  int result = _kernel_osfile(OS_File_GenerateError, f, &kosfb);
   assert(result == _kernel_ERROR);
   NOT_USED(result);
 
