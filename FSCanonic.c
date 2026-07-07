@@ -27,6 +27,7 @@
   CJB: 12-May-26: Make mixed-signedness buffer size calculations
                   warning-free and hopefully more robust.
   CJB: 22-May-26: Ensure only void * is converted to intptr_t.
+  CJB: 07-Jul-26: Use an initialiser for _kernel_swi_regs.
  */
 
 /* ISO library headers */
@@ -54,7 +55,6 @@ enum
 _Optional _kernel_oserror *os_fscontrol_canonicalise(_Optional char *buffer, size_t buff_size, _Optional const char *pv, _Optional const char *ps, const char *f, _Optional size_t *nbytes)
 {
   _Optional _kernel_oserror *e;
-  _kernel_swi_regs regs;
 
   assert(f != NULL);
 
@@ -71,12 +71,16 @@ _Optional _kernel_oserror *os_fscontrol_canonicalise(_Optional char *buffer, siz
          "or string '%s'\n", f, pv ? pv : "", ps ? ps : "");
 
   DEBUGF("FSCanonic: output buffer is %p of size %zu\n", (void *)buffer, buff_size);
-  regs.r[0] = FSControl_CanonicalisePath;
-  regs.r[1] = (intptr_t)(void *)f;
-  regs.r[2] = buffer ? (intptr_t)buffer : 0;
-  regs.r[3] = pv ? (intptr_t)pv : 0;
-  regs.r[4] = ps ? (intptr_t)ps : 0;
-  regs.r[5] = (intptr_t)buff_size;
+  _kernel_swi_regs regs = {
+    .r = {
+      FSControl_CanonicalisePath,
+      (intptr_t)(void *)f,
+      buffer ? (intptr_t)buffer : 0,
+      pv ? (intptr_t)pv : 0,
+      ps ? (intptr_t)ps : 0,
+      (intptr_t)buff_size,
+    },
+  };
   e = _kernel_swi(OS_FSControl, &regs, &regs);
 
   if (e == NULL && nbytes != NULL)
