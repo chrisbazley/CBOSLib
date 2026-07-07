@@ -20,6 +20,7 @@
 /* History:
   CJB: 29-May-16: Created this source file based on SetFType.c.
   CJB: 07-May-25: Dogfooding the _Optional qualifier.
+  CJB: 07-Jul-26: Declare _kernel_osfile_block with an initialiser.
  */
 
 /* ISO library headers */
@@ -44,12 +45,11 @@ enum
 _Optional _kernel_oserror *os_file_set_type(const char *f, int type)
 {
   _Optional _kernel_oserror *e = NULL;
-  _kernel_osfile_block os_file;
 
   assert(f != NULL);
   DEBUGF("FileSType: Setting type of file '%s' to 0x%x\n", f, type);
 
-  os_file.load = type;
+  _kernel_osfile_block os_file = {.load = type};
   if (_kernel_osfile(OS_File_SetTypeOfNamedObject, f, &os_file) == _kernel_ERROR)
      e = _kernel_last_oserror();
 
