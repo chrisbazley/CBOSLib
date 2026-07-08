@@ -21,6 +21,7 @@
   CJB: 16-Mar-19: Created this source file.
   CJB: 07-May-25: Dogfooding the _Optional qualifier.
   CJB: 22-May-26: Ensure only void * is converted to intptr_t.
+  CJB: 08-Jul-26: Use an initialiser for _kernel_swi_regs.
 */
 
 /* ISO library headers */
@@ -43,11 +44,14 @@ _Optional _kernel_oserror *os_sprite_op_rename(SpriteAreaHeader *const area,
   DEBUGF("SprRename: Renaming sprite '%s' as '%s' in area %p\n",
          old_name, new_name, (void *)area);
 
-  _kernel_swi_regs regs;
-  regs.r[0] = SPRITEOP_USERAREA_SPRNAME + SPRITEOP_RENAME;
-  regs.r[1] = (intptr_t)(void *)area;
-  regs.r[2] = (intptr_t)(void *)old_name;
-  regs.r[3] = (intptr_t)(void *)new_name;
+  _kernel_swi_regs regs = {
+    .r = {
+      SPRITEOP_USERAREA_SPRNAME + SPRITEOP_RENAME,
+      (intptr_t)(void *)area,
+      (intptr_t)(void *)old_name,
+      (intptr_t)(void *)new_name,
+    },
+  };
 
   return _kernel_swi(OS_SpriteOp, &regs, &regs);
 }
