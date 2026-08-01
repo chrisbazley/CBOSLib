@@ -4,8 +4,10 @@ project(CBOSLib C)
 include(FetchContent)
 
 FetchContent_Declare(OptionalAcornC GIT_REPOSITORY https://github.com/chrisbazley/OptionalAcornC.git GIT_TAG main)
+FetchContent_Declare(CBUtil GIT_REPOSITORY https://github.com/chrisbazley/CBUtilLib.git GIT_TAG main)
 
 FetchContent_MakeAvailable(OptionalAcornC)
+FetchContent_MakeAvailable(CBUtil)
 
 set(CMAKE_C_STANDARD 99)
 set(CMAKE_XCODE_ATTRIBUTE_RUN_CLANG_STATIC_ANALYZER "YES")
@@ -59,9 +61,10 @@ target_compile_definitions(CBOS PRIVATE
     $<$<CONFIG:Debug>:DEBUG_OUTPUT>
 )
 
-# Header files depend on definitions from this dependency
+# Header files depend on definitions from these dependencies
 target_link_libraries(CBOS PUBLIC
     OptionalAcornC
+    CBUtil
 )
 
 install(TARGETS CBOS
