@@ -55,7 +55,7 @@ set_target_properties(CBOS PROPERTIES
     DEBUG_POSTFIX "dbg"
 )
 
-target_include_directories(CBOS PUBLIC .)
+target_include_directories(CBOS CBUtil PUBLIC .)
 
 target_compile_definitions(CBOS PRIVATE
     $<$<CONFIG:Debug>:DEBUG_OUTPUT>
@@ -64,7 +64,6 @@ target_compile_definitions(CBOS PRIVATE
 # Header files depend on definitions from these dependencies
 target_link_libraries(CBOS PUBLIC
     OptionalAcornC
-    CBUtil
 )
 
 install(TARGETS CBOS
