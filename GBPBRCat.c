@@ -28,6 +28,8 @@
   CJB: 15-May-26: Allow the buffer argument to be null. Use size_t for the
                   number of objects for which to read catalogue info.
                   More explicit conversions checked by assertions.
+  CJB: 02-Aug-26: Stop assigning a maybe-null pointer to the dataptr
+                  member of _kernel_osgbpb_block.
  */
 
 /* ISO library headers */
@@ -82,7 +84,7 @@ os_gbpb_read_cat_no_path(const char *f, _Optional void *buffer,
   assert(buff_size <= (uintptr_t)INTPTR_MAX);
 
   _kernel_osgbpb_block gbpb_params = {
-    .dataptr = buffer,
+    .dataptr = buffer ? &*buffer : &(char){0},
     .nbytes = (intptr_t)*n,
     .fileptr = *pos,
     .buf_len = (intptr_t)buff_size,
