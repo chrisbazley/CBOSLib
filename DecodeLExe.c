@@ -23,6 +23,8 @@
   CJB: 15-May-26: Use intptr_t instead of int for addresses.
   CJB: 16-May-26: Cast the top byte of the timestamp to type uint8_t
                   on assignment to suppress a warning.
+  CJB: 02-Aug-26: Stop passing a pointer to _Optional OS_DateAndTime into
+                  memset.
  */
 
 /* ISO library headers */
@@ -74,7 +76,7 @@ int decode_load_exec(intptr_t load, intptr_t exec, _Optional OS_DateAndTime *tim
 
     if (time != NULL)
     {
-      memset(time, 0, sizeof(time->bytes));
+      memset(&*time, 0, sizeof(time->bytes));
     }
     DEBUGF("DateStamp: File is untyped\n");
   }
