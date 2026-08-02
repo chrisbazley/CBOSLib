@@ -84,7 +84,7 @@ os_gbpb_read_cat_no_path(const char *f, _Optional void *buffer,
   assert(buff_size <= (uintptr_t)INTPTR_MAX);
 
   _kernel_osgbpb_block gbpb_params = {
-    .dataptr = buffer ? &*buffer : &(char){0},
+    .dataptr = (void *)buffer,
     .nbytes = (intptr_t)*n,
     .fileptr = *pos,
     .buf_len = (intptr_t)buff_size,
