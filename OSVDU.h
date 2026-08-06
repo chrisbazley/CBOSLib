@@ -35,6 +35,8 @@ History:
                   variable enumeration to placate clang-tidy.
                   Combine the two anonymous enums used to define
                   PlotOp values to avoid compiler warnings.
+  CJB: 06-Aug-26: Add missing _Optional qualifiers to the types of the
+                  output parameters of os_read_mode_variable.
 */
 
 #ifndef OSVDU_h
@@ -265,10 +267,10 @@ _Optional _kernel_oserror *os_read_vdu_variables(const VDUVar /*vars*/[],
     * Returns: a pointer to an OS error block, or else NULL for success.
     */
 
-_Optional _kernel_oserror *os_read_mode_variable(int      /*mode*/,
-                                                 ModeVar  /*var*/,
-                                                 int     */*value*/,
-                                                 bool    */*valid*/);
+_Optional _kernel_oserror *os_read_mode_variable(int                /*mode*/,
+                                                 ModeVar            /*var*/,
+                                                 _Optional int     */*value*/,
+                                                 _Optional bool    */*valid*/);
    /*
     * Reads information about a given screen mode without having to change into
     * that mode. However, only one variable can be read at a time (unlike

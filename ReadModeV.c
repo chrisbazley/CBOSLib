@@ -25,6 +25,9 @@
   CJB: 07-May-25: Dogfooding the _Optional qualifier.
   CJB: 13-May-26: Assert OS_ReadModeVariable result is in range and
                   explicitly convert it to int.
+  CJB: 06-Aug-26: Add missing _Optional qualifiers to the types of the
+                  output parameters of os_read_mode_variable.
+
 */
 
 /* ISO library headers */
@@ -45,7 +48,8 @@
 /*                         Public functions                                */
 
 _Optional _kernel_oserror *os_read_mode_variable(int mode, ModeVar var,
-                                                 int *value, bool *valid)
+                                                 _Optional int *value,
+                                                 _Optional bool *valid)
 {
   _Optional _kernel_oserror *e = NULL;
   int carry;
