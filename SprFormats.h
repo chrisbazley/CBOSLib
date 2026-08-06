@@ -55,6 +55,8 @@ History:
                   structs for transformed sprite plotting.
   CJB: 20-Jun-26: Use nonstring attribute to suppress GCC warnings about
                   sprite names.
+  CJB: 06-Aug-26: Fix epic fail caused by the fact that Clang lies about being
+                  GCC without actually supporting GCC features (like nonstring).
 */
 #ifndef SprFormats_h
 #define SprFormats_h
@@ -62,8 +64,12 @@ History:
 /* ISO library headers */
 #include <stdint.h>
 
-#if defined(__GNUC__)
+#if defined __has_attribute
+#if __has_attribute (nonstring)
 #define SPRITE_NON_STRING __attribute__((nonstring))
+#else
+#define SPRITE_NON_STRING
+#endif
 #else
 #define SPRITE_NON_STRING
 #endif
