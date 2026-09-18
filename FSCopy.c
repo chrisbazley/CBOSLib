@@ -21,6 +21,7 @@
   CJB: 14-Mar-19: Created this source file
   CJB: 07-May-25: Dogfooding the _Optional qualifier.
   CJB: 22-May-26: Ensure only void * is converted to intptr_t.
+  CJB: 18-Sep-26: Declare registers object with an initialiser.
  */
 
 /* ISO library headers */
@@ -50,11 +51,14 @@ _Optional _kernel_oserror *os_fscontrol_copy(const char *src,
   DEBUGF("FSCopy: about to copy '%s' to '%s' with flags 0x%x\n",
          src, dst, flags);
 
-  _kernel_swi_regs regs;
-  regs.r[0] = FSControl_CopyObjects;
-  regs.r[1] = (intptr_t)(void *)src;
-  regs.r[2] = (intptr_t)(void *)dst;
-  regs.r[3] = (intptr_t)flags;
+  _kernel_swi_regs regs = {
+    .r = {
+      FSControl_CopyObjects,
+      (intptr_t)(void *)src,
+      (intptr_t)(void *)dst,
+      (intptr_t)flags,
+    }
+  };
   _Optional _kernel_oserror *const e = _kernel_swi(OS_FSControl, &regs, &regs);
 
   if (e != NULL)
