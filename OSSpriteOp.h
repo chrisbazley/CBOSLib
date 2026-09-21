@@ -30,6 +30,7 @@ History:
                   os_sprite_op_plot_trans_matrix_sprite.
   CJB: 07-May-25: Dogfooding the _Optional qualifier.
   CJB: 11-May-26: Use intptr_t for reason in SpriteRestoreOutputBlock.
+  CJB: 21-Sep-26: Allow a const sprite area to be saved.
 */
 #ifndef OSSpriteOp_h
 #define OSSpriteOp_h
@@ -49,7 +50,7 @@ _Optional _kernel_oserror *os_sprite_op_initialise(SpriteAreaHeader *area);
 _Optional _kernel_oserror *os_sprite_op_load(SpriteAreaHeader *area,
   const char *file_name);
 
-_Optional _kernel_oserror *os_sprite_op_save(SpriteAreaHeader *area,
+_Optional _kernel_oserror *os_sprite_op_save(const SpriteAreaHeader *area,
   const char *file_name);
 
 _Optional _kernel_oserror *os_sprite_op_read_header(SpriteAreaHeader *area,
