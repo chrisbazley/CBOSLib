@@ -28,7 +28,8 @@
                   warning-free and hopefully more robust.
   CJB: 22-May-26: Ensure only void * is converted to intptr_t.
   CJB: 07-Jul-26: Use an initialiser for _kernel_swi_regs.
- */
+   CJB: 21-Sep-26: Declare variables when they are first assigned.
+*/
 
 /* ISO library headers */
 #include <stdint.h>
@@ -54,7 +55,6 @@ enum
 
 _Optional _kernel_oserror *os_fscontrol_canonicalise(_Optional char *buffer, size_t buff_size, _Optional const char *pv, _Optional const char *ps, const char *f, _Optional size_t *nbytes)
 {
-  _Optional _kernel_oserror *e;
 
   assert(f != NULL);
 
@@ -81,7 +81,7 @@ _Optional _kernel_oserror *os_fscontrol_canonicalise(_Optional char *buffer, siz
       (intptr_t)buff_size,
     },
   };
-  e = _kernel_swi(OS_FSControl, &regs, &regs);
+  _Optional _kernel_oserror *e = _kernel_swi(OS_FSControl, &regs, &regs);
 
   if (e == NULL && nbytes != NULL)
   {
