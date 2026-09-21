@@ -21,6 +21,7 @@
   CJB: 16-Mar-19: Created this source file.
   CJB: 07-May-25: Dogfooding the _Optional qualifier.
   CJB: 22-May-26: Ensure only void * is converted to intptr_t.
+  CJB: 21-Sep-26: Declare SWI registers with an initialiser.
 */
 
 /* ISO library headers */
@@ -43,14 +44,17 @@ _Optional _kernel_oserror *os_sprite_op_create_sprite(SpriteAreaHeader *const ar
          "%s, in area %p\n", name, width, height, mode,
          has_palette ? "palette" : "no palette", (void *)area);
 
-  _kernel_swi_regs regs;
-  regs.r[0] = SPRITEOP_USERAREA_SPRNAME + SPRITEOP_CREATE;
-  regs.r[1] = (intptr_t)(void *)area;
-  regs.r[2] = (intptr_t)(void *)name;
-  regs.r[3] = (intptr_t)has_palette;
-  regs.r[4] = (intptr_t)width;
-  regs.r[5] = (intptr_t)height;
-  regs.r[6] = (intptr_t)mode;
+  _kernel_swi_regs regs = {
+    .r = {
+      SPRITEOP_USERAREA_SPRNAME + SPRITEOP_CREATE,
+      (intptr_t)(void *)area,
+      (intptr_t)(void *)name,
+      (intptr_t)has_palette,
+      (intptr_t)width,
+      (intptr_t)height,
+      (intptr_t)mode,
+    }
+  };
 
   return _kernel_swi(OS_SpriteOp, &regs, &regs);
 }

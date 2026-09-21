@@ -27,6 +27,7 @@
   CJB: 12-May-26: Validate and explicitly convert output register values.
   CJB: 22-May-26: Ensure only void * is converted to intptr_t.
   CJB: 21-Sep-26: Declare variables when they are first assigned.
+  CJB: 21-Sep-26: Declare SWI registers with initialisers.
 */
 
 /* ISO library headers */
@@ -50,12 +51,15 @@ _Optional _kernel_oserror *messagetrans_file_info(const char   *filename,
                                         unsigned int *flags,
                                         size_t       *buff_size)
 {
-  _kernel_swi_regs regs;
-
   assert(filename != NULL);
 
   DEBUGF("MTFile: Getting message file info for path '%s'\n", filename);
-  regs.r[1] = (intptr_t)(void *)filename;
+  _kernel_swi_regs regs = {
+    .r = {
+      0,
+      (intptr_t)(void *)filename,
+    }
+  };
   _Optional _kernel_oserror *e = _kernel_swi(MessageTrans_FileInfo, &regs, &regs);
   if (e == NULL)
   {
@@ -84,17 +88,19 @@ _Optional _kernel_oserror *messagetrans_open_file(MessagesFD     *mfd,
                                                   const char     *filename,
                                                   _Optional void *buffer)
 {
-  _kernel_swi_regs regs;
-
   assert(mfd != NULL);
   assert(filename != NULL);
 
   DEBUGF("MTFile: Opening message file %p at path '%s' with buffer %p\n",
          (void *)mfd, filename, buffer);
 
-  regs.r[0] = (intptr_t)(void *)mfd;
-  regs.r[1] = (intptr_t)(void *)filename;
-  regs.r[2] = buffer ? (intptr_t)(void *)buffer : 0;
+  _kernel_swi_regs regs = {
+    .r = {
+      (intptr_t)(void *)mfd,
+      (intptr_t)(void *)filename,
+      buffer ? (intptr_t)(void *)buffer : 0,
+    }
+  };
   _Optional _kernel_oserror *e = _kernel_swi(MessageTrans_OpenFile, &regs, &regs);
   if (e != NULL)
   {
@@ -107,12 +113,14 @@ _Optional _kernel_oserror *messagetrans_open_file(MessagesFD     *mfd,
 
 _Optional _kernel_oserror *messagetrans_close_file(MessagesFD *mfd)
 {
-  _kernel_swi_regs regs;
-
   assert(mfd != NULL);
 
   DEBUGF("MTFile: Closing message file %p\n", (void *)mfd);
-  regs.r[0] = (intptr_t)(void *)mfd;
+  _kernel_swi_regs regs = {
+    .r = {
+      (intptr_t)(void *)mfd,
+    }
+  };
   _Optional _kernel_oserror *e = _kernel_swi(MessageTrans_CloseFile, &regs, &regs);
   if (e != NULL)
   {
