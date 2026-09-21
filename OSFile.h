@@ -32,6 +32,7 @@ History:
                   os_file_generate_error shouldn't return pointer to optional.
   CJB: 15-May-26: Use intptr_t instead of int for addresses.
   CJB: 21-Sep-26: Added a veneer for os_file_create_stamped.
+  CJB: 21-Sep-26: Added filing system object attribute flags.
 */
 
 #ifndef OSFile_h
@@ -74,6 +75,20 @@ enum
   ObjectType_File,
   ObjectType_Directory,
   ObjectType_Image
+};
+
+/* --- Filing system object attributes --- */
+
+enum
+{
+  OS_File_Attribute_OwnerRead    = 0x01,
+  OS_File_Attribute_OwnerWrite   = 0x02,
+  OS_File_Attribute_OwnerSpecial = 0x04,
+  OS_File_Attribute_OwnerLocked  = 0x08,
+  OS_File_Attribute_WorldRead    = 0x10,
+  OS_File_Attribute_WorldWrite   = 0x20,
+  OS_File_Attribute_WorldSpecial = 0x40,
+  OS_File_Attribute_WorldLocked  = 0x80
 };
 
 /* Catalogue information for a filing system object. */
