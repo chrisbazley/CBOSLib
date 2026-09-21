@@ -31,6 +31,7 @@ History:
   CJB: 10-May-25: Make the output of decode_load_exec optional.
                   os_file_generate_error shouldn't return pointer to optional.
   CJB: 15-May-26: Use intptr_t instead of int for addresses.
+  CJB: 21-Sep-26: Added a veneer for os_file_create_stamped.
 */
 
 #ifndef OSFile_h
@@ -107,6 +108,14 @@ _Optional _kernel_oserror *os_file_create_dir(const char * /*f*/, int /*n*/);
     * Creates a directory named 'f' with 'n' entries (or
     * OS_File_CreateDir_DefaultNoOfEntries). It is not an error if the directory
     * already exists.
+    * Returns: a pointer to an OS error block, or else NULL for success.
+    */
+
+_Optional _kernel_oserror *os_file_create_stamped(const char * /*f*/,
+                                                   int /*type*/,
+                                                   long int /*length*/);
+   /*
+    * Creates a stamped file named 'f', of the specified file type and length.
     * Returns: a pointer to an OS error block, or else NULL for success.
     */
 

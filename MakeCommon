@@ -1,7 +1,7 @@
 # Project:   CBOSLib
 LibName = CBOS
 ObjectList = OSPlot ClrTrans CTSetGCOL ReadVDUVar ReadModeV DragAnObj \
-             MTError MTLookup MTFile FSCanonic FileCDir FileError FileRCat \
+             MTError MTLookup MTFile FSCanonic FileCDir FileCStmp FileError FileRCat \
              GBPBRCat FileSType PalEntry Hourglass ReadRTC DecodeLExe \
              ReadTime FSCopy FSWipe SprInit SprLoad SprSave SprReadHdr SprVerify \
              SprCreateS SprCreateM SprRename SprDelete SprSetPtr SprPlotScl \
