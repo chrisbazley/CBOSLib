@@ -23,6 +23,7 @@
   CJB: 16-May-26: Assert that SWI's return values are within range for
                   type int and explicity convert them to that type.
   CJB: 22-May-26: Ensure only void * is converted to intptr_t.
+  CJB: 21-Sep-26: Declare SWI registers with an initialiser.
 */
 
 /* ISO library headers */
@@ -45,9 +46,12 @@ _Optional _kernel_oserror *os_sprite_op_read_header(SpriteAreaHeader *const area
   DEBUGF("SprReadHdr: Reading header of sprite area %p to %p\n",
          (void *)area, (void *)hdr);
 
-  _kernel_swi_regs regs;
-  regs.r[0] = SPRITEOP_USERAREA_SPRNAME + SPRITEOP_READCTRLBLOCK;
-  regs.r[1] = (intptr_t)(void *)area;
+  _kernel_swi_regs regs = {
+    .r = {
+      SPRITEOP_USERAREA_SPRNAME + SPRITEOP_READCTRLBLOCK,
+      (intptr_t)(void *)area,
+    }
+  };
 
   _Optional _kernel_oserror *const e = _kernel_swi(OS_SpriteOp, &regs, &regs);
   if (e == NULL)

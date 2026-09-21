@@ -21,6 +21,7 @@
   CJB: 16-Mar-19: Created this source file.
   CJB: 07-May-25: Dogfooding the _Optional qualifier.
   CJB: 22-May-26: Ensure only void * is converted to intptr_t.
+  CJB: 21-Sep-26: Declare SWI registers with an initialiser.
 */
 
 /* ISO library headers */
@@ -42,10 +43,13 @@ _Optional _kernel_oserror *os_sprite_op_load(SpriteAreaHeader *const area,
   DEBUGF("SprLoad: Loading sprite area %p from file '%s'\n",
          (void *)area, file_name);
 
-  _kernel_swi_regs regs;
-  regs.r[0] = SPRITEOP_USERAREA_SPRNAME + SPRITEOP_LOAD_AREA;
-  regs.r[1] = (intptr_t)(void *)area;
-  regs.r[2] = (intptr_t)(void *)file_name;
+  _kernel_swi_regs regs = {
+    .r = {
+      SPRITEOP_USERAREA_SPRNAME + SPRITEOP_LOAD_AREA,
+      (intptr_t)(void *)area,
+      (intptr_t)(void *)file_name,
+    }
+  };
 
   return _kernel_swi(OS_SpriteOp, &regs, &regs);
 }
