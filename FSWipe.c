@@ -1,6 +1,6 @@
 /*
- * CBOSLib: Veneer for SWI OS_SpriteOp 47
- * Copyright (C) 2022 Christopher Bazley
+ * CBOSLib: Veneer for SWI OS_FSControl 27
+ * Copyright (C) 2026 Christopher Bazley
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -18,12 +18,11 @@
  */
 
 /* History:
-  CJB: 26-Jun-22: Created this source file.
-  CJB: 07-May-25: Dogfooding the _Optional qualifier.
-  CJB: 21-Sep-26: Ensure only void * is converted to intptr_t.
+  CJB: 21-Sep-26: Created this source file.
 */
 
 /* ISO library headers */
+#include <stddef.h>
 #include <stdint.h>
 
 /* Acorn C/C++ library headers */
@@ -31,23 +30,36 @@
 #include "swis.h"
 
 /* Local headers */
-#include "OSSpriteOp.h"
 #include "Internal/CBOSMisc.h"
+#include "OSFSCntrl.h"
 
-_Optional _kernel_oserror *os_sprite_op_flip_y(
-  SpriteAreaHeader *const area, const char *const name)
+/* Constant numeric values */
+enum
 {
-  assert(area != NULL);
-  assert(name != NULL);
-  DEBUGF(
-         "SprPlot: Flip Y of sprite '%s' in area %p\n",
-         name, (void *)area);
+  FSControl_WipeObjects = 27
+};
 
-  _kernel_swi_regs regs = {.r = {
-     SPRITEOP_USERAREA_SPRNAME + SPRITEOP_FLIP_Y,
-     (intptr_t)(void *)area,
-     (intptr_t)(void *)name,
-  }};
+_Optional _kernel_oserror *os_fscontrol_wipe(const char *path,
+  unsigned int flags)
+{
+  assert(path != NULL);
 
-  return _kernel_swi(OS_SpriteOp, &regs, &regs);
+  DEBUGF("FSWipe: about to wipe '%s' with flags 0x%x\n", path, flags);
+
+  _kernel_swi_regs regs = {
+    .r = {
+      FSControl_WipeObjects,
+      (intptr_t)(void *)path,
+      0,
+      (intptr_t)flags,
+    }
+  };
+  _Optional _kernel_oserror *const e = _kernel_swi(OS_FSControl, &regs, &regs);
+
+  if (e != NULL)
+  {
+    DEBUGF("FSWipe: SWI returned error 0x%x '%s'\n",
+           e->errnum, e->errmess);
+  }
+  return e;
 }

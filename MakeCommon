@@ -3,7 +3,7 @@ LibName = CBOS
 ObjectList = OSPlot ClrTrans CTSetGCOL ReadVDUVar ReadModeV DragAnObj \
              MTError MTLookup MTFile FSCanonic FileCDir FileError FileRCat \
              GBPBRCat FileSType PalEntry Hourglass ReadRTC DecodeLExe \
-             ReadTime FSCopy SprInit SprLoad SprSave SprReadHdr SprVerify \
+             ReadTime FSCopy FSWipe SprInit SprLoad SprSave SprReadHdr SprVerify \
              SprCreateS SprCreateM SprRename SprDelete SprSetPtr SprPlotScl \
              SprOutput SprRestore SprReadInf SprSelect SetColour SetPtrBBox \
              PickFType CopyFType CountFType InFType ComFType \

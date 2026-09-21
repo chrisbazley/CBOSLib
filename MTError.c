@@ -26,6 +26,7 @@
   CJB: 29-Aug-22: Use size_t rather than unsigned int for nparam.
   CJB: 07-May-25: Dogfooding the _Optional qualifier.
   CJB: 21-Sep-26: Declare variables when they are first assigned.
+                  Ensure only void * is converted to intptr_t.
 */
 
 /* ISO library headers */
@@ -93,8 +94,8 @@ _kernel_oserror *messagetrans_error_vlookup(
 
   _kernel_swi_regs regs = {
     .r = {
-      (intptr_t)&temp,
-      mfd ? (intptr_t)mfd : 0
+      (intptr_t)(void *)&temp,
+      mfd ? (intptr_t)(void *)mfd : 0
     }
   };
 
@@ -107,7 +108,7 @@ _kernel_oserror *messagetrans_error_vlookup(
     {
       param = va_arg(params, char *);
       DEBUGF("MTError: parameter %zu is '%s'\n", p, param ? param : "");
-      regs.r[4 + p] = param ? (intptr_t)param : 0;
+      regs.r[4 + p] = param ? (intptr_t)(void *)param : 0;
     }
   }
 

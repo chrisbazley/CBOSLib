@@ -27,6 +27,7 @@
   CJB: 12-May-26: Make mixed-signedness buffer size calculations warning-free
                   and hopefully more robust.
   CJB: 22-May-26: Ensure only void * is converted to intptr_t.
+  CJB: 21-Sep-26: Fix a missed typed pointer conversion to intptr_t.
 */
 
 /* ISO library headers */
@@ -82,7 +83,7 @@ colourtrans_read_palette(unsigned int flags, const ColourTransContext *source,
   assign_regs(&regs.r[0], source);
 
   /* Find buffer size and/or read palette into caller's buffer */
-  regs.r[2] = buffer ? (intptr_t)buffer : 0;
+  regs.r[2] = buffer ? (intptr_t)(void *)buffer : 0;
   regs.r[3] = (intptr_t)buff_size;
   regs.r[4] = flags;
   DEBUGF("ClrTrans: Calling ColourTrans_ReadPalette with "

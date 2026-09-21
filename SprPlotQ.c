@@ -20,6 +20,7 @@
 /* History:
   CJB: 25-Jun-22: Created this source file.
   CJB: 07-May-25: Dogfooding the _Optional qualifier.
+  CJB: 21-Sep-26: Ensure only void * is converted to intptr_t.
 */
 
 /* ISO library headers */
@@ -62,13 +63,13 @@ _Optional _kernel_oserror *os_sprite_op_plot_trans_quad_sprite(
 
   _kernel_swi_regs regs = {.r = {
      SPRITEOP_USERAREA_SPRNAME + SPRITEOP_PLOT_TRANSFORMED_SPRITE,
-     (intptr_t)area,
-     (intptr_t)name,
+     (intptr_t)(void *)area,
+     (intptr_t)(void *)name,
      flags,
-     src ? (intptr_t)src : 0,
+     src ? (intptr_t)(void *)src : 0,
      action,
-     (intptr_t)quad,
-     colours ? (intptr_t)colours : 0
+     (intptr_t)(void *)quad,
+     colours ? (intptr_t)(void *)colours : 0
   }};
 
   return _kernel_swi(OS_SpriteOp, &regs, &regs);

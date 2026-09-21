@@ -28,7 +28,8 @@
                   warning-free and hopefully more robust.
   CJB: 22-May-26: Ensure only void * is converted to intptr_t.
   CJB: 07-Jul-26: Use an initialiser for _kernel_swi_regs.
-   CJB: 21-Sep-26: Declare variables when they are first assigned.
+  CJB: 21-Sep-26: Declare variables when they are first assigned.
+                  Fix missed typed pointer conversions to intptr_t.
 */
 
 /* ISO library headers */
@@ -75,9 +76,9 @@ _Optional _kernel_oserror *os_fscontrol_canonicalise(_Optional char *buffer, siz
     .r = {
       FSControl_CanonicalisePath,
       (intptr_t)(void *)f,
-      buffer ? (intptr_t)buffer : 0,
-      pv ? (intptr_t)pv : 0,
-      ps ? (intptr_t)ps : 0,
+      buffer ? (intptr_t)(void *)buffer : 0,
+      pv ? (intptr_t)(void *)pv : 0,
+      ps ? (intptr_t)(void *)ps : 0,
       (intptr_t)buff_size,
     },
   };
