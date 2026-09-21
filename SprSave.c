@@ -22,6 +22,7 @@
   CJB: 25-Apr-21: Correct text of debugging output from os_sprite_op_save().
   CJB: 07-May-25: Dogfooding the _Optional qualifier.
   CJB: 22-May-26: Ensure only void * is converted to intptr_t.
+  CJB: 21-Sep-26: Allow a const sprite area to be saved.
 */
 
 /* ISO library headers */
@@ -35,17 +36,17 @@
 #include "OSSpriteOp.h"
 #include "Internal/CBOSMisc.h"
 
-_Optional _kernel_oserror *os_sprite_op_save(SpriteAreaHeader *const area,
+_Optional _kernel_oserror *os_sprite_op_save(const SpriteAreaHeader *const area,
   const char *const file_name)
 {
   assert(area != NULL);
   assert(file_name != NULL);
   DEBUGF("SprSave: Saving sprite area %p to file '%s'\n",
-         (void *)area, file_name);
+         (const void *)area, file_name);
 
   _kernel_swi_regs regs;
   regs.r[0] = SPRITEOP_USERAREA_SPRNAME + SPRITEOP_SAVE_AREA;
-  regs.r[1] = (intptr_t)(void *)area;
+  regs.r[1] = (intptr_t)(const void *)area;
   regs.r[2] = (intptr_t)(void *)file_name;
 
   return _kernel_swi(OS_SpriteOp, &regs, &regs);
