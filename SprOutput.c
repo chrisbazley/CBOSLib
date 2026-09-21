@@ -22,6 +22,7 @@
   CJB: 07-May-25: Dogfooding the _Optional qualifier.
   CJB: 11-May-26: Use intptr_t for reason in SpriteRestoreOutputBlock.
   CJB: 22-May-26: Ensure only void * is converted to intptr_t.
+  CJB: 21-Sep-26: Fix a missed typed pointer conversion to intptr_t.
 */
 
 /* ISO library headers */
@@ -94,7 +95,7 @@ static _Optional _kernel_oserror *switch_output_common(SpriteAreaHeader *const a
         regs.r[0] = reason + (area ? SPRITEOP_USERAREA_SPRNAME :
                                      SPRITEOP_SYSTEMAREA);
         regs.r[1] = (intptr_t)(void *)area;
-        regs.r[2] = name ? (intptr_t)name : 0;
+        regs.r[2] = name ? (intptr_t)(void *)name : 0;
         regs.r[3] = (intptr_t)(void *)buffer;
         e = _kernel_swi(OS_SpriteOp, &regs, &regs);
         if (e != NULL)

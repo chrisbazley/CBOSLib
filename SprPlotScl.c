@@ -22,6 +22,7 @@
   CJB: 26-Jun-22: Use initializer on _kernel_swi_regs declaration.
                   Allow 'const' scale factors and colour translation table.
   CJB: 07-May-25: Dogfooding the _Optional qualifier.
+  CJB: 21-Sep-26: Ensure only void * is converted to intptr_t.
 */
 
 /* ISO library headers */
@@ -56,13 +57,13 @@ _Optional _kernel_oserror *os_sprite_op_plot_scaled_sprite(
 
   _kernel_swi_regs regs = {.r = {
      SPRITEOP_USERAREA_SPRNAME + SPRITEOP_PLOTSCALED,
-     (intptr_t)area,
-     (intptr_t)name,
+     (intptr_t)(void *)area,
+     (intptr_t)(void *)name,
      x,
      y,
      action,
-     scale ? (intptr_t)scale : 0,
-     colours ? (intptr_t)colours : 0,
+     scale ? (intptr_t)(void *)scale : 0,
+     colours ? (intptr_t)(void *)colours : 0,
   }};
 
   return _kernel_swi(OS_SpriteOp, &regs, &regs);

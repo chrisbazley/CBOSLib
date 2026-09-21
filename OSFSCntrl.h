@@ -25,6 +25,7 @@ History:
   CJB: 14-Mar-19: Added the os_fscontrol_copy function.
   CJB: 11-Dec-20: Remove redundant uses of the 'extern' keyword.
   CJB: 07-May-25: Dogfooding the _Optional qualifier.
+  CJB: 21-Sep-26: Added the os_fscontrol_wipe function.
 */
 
 #ifndef OSFSCntrl_h
@@ -80,6 +81,14 @@ _Optional _kernel_oserror *os_fscontrol_copy(const char * /*src*/,
     * Copy files conforming to a given wildcarded filename to a destination
     * filename. According to the flags, the operation may recurse and source
     * files may be deleted after being copied.
+    * Returns: a pointer to an OS error block, or else NULL for success.
+    */
+
+_Optional _kernel_oserror *os_fscontrol_wipe(const char * /*path*/,
+  unsigned int /*flags*/);
+   /*
+    * Deletes filing system objects conforming to a given wildcarded filename.
+    * OS_FSControl_Recurse may be specified to recurse into directories.
     * Returns: a pointer to an OS error block, or else NULL for success.
     */
 
