@@ -25,7 +25,8 @@
   CJB: 07-May-25: Dogfooding the _Optional qualifier.
   CJB: 10-May-25: os_file_generate_error shouldn't return pointer to optional.
   CJB: 07-Jul-26: Declare _kernel_osfile_block with an initialiser.
- */
+   CJB: 21-Sep-26: Declare variables when they are first assigned.
+*/
 
 /* ISO library headers */
 #include <stddef.h>
@@ -48,7 +49,6 @@ enum
 
 _kernel_oserror *os_file_generate_error(const char *f, int object_type)
 {
-  _Optional _kernel_oserror *e;
 
   assert(f != NULL);
   assert(object_type == OS_File_GenerateError_FileNotFound || object_type == OS_File_GenerateError_IsAFile || object_type == OS_File_GenerateError_IsADirectory || object_type == OS_File_GenerateError_DirectoryNotFound);
@@ -60,7 +60,7 @@ _kernel_oserror *os_file_generate_error(const char *f, int object_type)
   assert(result == _kernel_ERROR);
   NOT_USED(result);
 
-  e = _kernel_last_oserror();
+  _Optional _kernel_oserror *e = _kernel_last_oserror();
   assert(e != NULL);
   DEBUGF("FileError: _kernel_osfile set error %d:%s\n",
          e->errnum, e->errmess);

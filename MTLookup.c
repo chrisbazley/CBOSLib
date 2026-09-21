@@ -31,6 +31,7 @@
   CJB: 07-May-25: Dogfooding the _Optional qualifier.
   CJB: 12-May-26: Handle mixed-signedness calculations more carefully.
   CJB: 22-May-26: Ensure only void * is converted to intptr_t.
+  CJB: 21-Sep-26: Declare variables when they are first assigned.
 */
 
 /* ISO library headers */
@@ -64,11 +65,10 @@ _Optional _kernel_oserror *messagetrans_lookup(_Optional MessagesFD   *mfd,
                                                size_t                  nparam,
                                                ...)
 {
-  _Optional _kernel_oserror *e;
   va_list ap;
 
   va_start(ap, nparam); /* make ap point to first unnamed arg */
-  e = messagetrans_vlookup(mfd, token, buffer, buff_size, nbytes, nparam, ap);
+  _Optional _kernel_oserror *e = messagetrans_vlookup(mfd, token, buffer, buff_size, nbytes, nparam, ap);
   va_end(ap);
 
   return e;

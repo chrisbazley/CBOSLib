@@ -29,7 +29,8 @@
                   Reordered functions to allow removal of pre-declarations.
                   Added more 'const' qualifiers to declarations.
   CJB: 13-May-26: Use int instead of unsigned int for component values.
- */
+   CJB: 21-Sep-26: Declare variables when they are first assigned.
+*/
 
 /* ISO library headers */
 #include <stddef.h>
@@ -171,13 +172,12 @@ int rgb_brightness(int red, int green, int blue)
 
 PaletteEntry make_palette_entry(int red, int green, int blue)
 {
-  PaletteEntry colour;
 
   CLIP_COMPONENT(red);
   CLIP_COMPONENT(green);
   CLIP_COMPONENT(blue);
 
-  colour = (((PaletteEntry)red << PaletteEntry_RedShift) & PaletteEntry_RedMask) |
+  PaletteEntry colour = (((PaletteEntry)red << PaletteEntry_RedShift) & PaletteEntry_RedMask) |
            (((PaletteEntry)green << PaletteEntry_GreenShift) & PaletteEntry_GreenMask) |
            (((PaletteEntry)blue << PaletteEntry_BlueShift) & PaletteEntry_BlueMask);
 

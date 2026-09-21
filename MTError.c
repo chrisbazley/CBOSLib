@@ -25,6 +25,7 @@
   CJB: 28-Oct-20: Fixed null pointer instead of string passed to DEBUGF.
   CJB: 29-Aug-22: Use size_t rather than unsigned int for nparam.
   CJB: 07-May-25: Dogfooding the _Optional qualifier.
+  CJB: 21-Sep-26: Declare variables when they are first assigned.
 */
 
 /* ISO library headers */
@@ -57,11 +58,10 @@ _kernel_oserror *messagetrans_error_lookup(
                          size_t                 nparam,
                          ...)
 {
-  _kernel_oserror *e;
   va_list ap;
 
   va_start(ap, nparam); /* make ap point to first unnamed arg */
-  e = messagetrans_error_vlookup(mfd, errnum, token, nparam, ap);
+  _kernel_oserror *e = messagetrans_error_vlookup(mfd, errnum, token, nparam, ap);
   va_end(ap);
 
   return e;
