@@ -22,10 +22,13 @@
   CJB: 07-May-25: Dogfooding the _Optional qualifier.
   CJB: 22-Sep-26: Enable pseudo-kernel calls whenever Fortify is enabled,
                   independently of whether CBDebugLib supplies the debug macros.
+  CJB: 22-Sep-26: Use common macro definitions from CBUtilLib.
 */
 
 #ifndef CBOSMisc_h
 #define CBOSMisc_h
+
+#include "MacroUtils.h"
 
 #ifdef USE_CBDEBUG
 
@@ -53,17 +56,6 @@
 #ifdef FORTIFY
 #include "PseudoKern.h"
 #endif
-
-#define NOT_USED(x) ((void)(x))
-
-/* Copy a string into a character array of known size, truncating it to fit if
- * necessary. Unlike strncpy(), this macro ensures that the copied string is NUL
- * terminated if it has to be truncated.
- */
-#define STRCPY_SAFE(string_1, string_2) do { \
-  strncpy((string_1), (string_2), sizeof(string_1) - 1); \
-  string_1[sizeof(string_1) - 1]='\0'; \
-} while (0)
 
 #ifdef USE_OPTIONAL
 #include "Optional.h"
