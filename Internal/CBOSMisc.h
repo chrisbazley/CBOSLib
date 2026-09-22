@@ -20,6 +20,8 @@
 /* History:
   CJB: 05-May-19: Added an alternative definition of DEBUG_VERBOSEF.
   CJB: 07-May-25: Dogfooding the _Optional qualifier.
+  CJB: 22-Sep-26: Enable pseudo-kernel calls whenever Fortify is enabled,
+                  independently of whether CBDebugLib supplies the debug macros.
 */
 
 #ifndef CBOSMisc_h
@@ -28,7 +30,6 @@
 #ifdef USE_CBDEBUG
 
 #include "Debug.h"
-#include "PseudoKern.h"
 
 #else /* USE_CBDEBUG */
 
@@ -48,6 +49,10 @@
 #endif /* DEBUG_OUTPUT */
 
 #endif /* USE_CBDEBUG */
+
+#ifdef FORTIFY
+#include "PseudoKern.h"
+#endif
 
 #define NOT_USED(x) ((void)(x))
 
