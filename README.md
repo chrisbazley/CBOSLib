@@ -13,11 +13,13 @@ platforms. It should not dynamically allocate memory.
 
 Rebuilding the library
 ----------------------
-  You should ensure that the standard C library and CBDebugLib (by the same
-author as CBOSLib) are on your C$Path, otherwise the compiler won't be able
-to find the required header files. The dependency on CBDebugLib isn't very
-strong: it can be eliminated by modifying the make file so that the macro
-USE_CBDEBUG is no longer predefined.
+  You should ensure that the standard C library, CBDebugLib and CBPseudoLib
+(by the same author as CBOSLib) are on your C$Path, otherwise the compiler
+won't be able to find the required header files. The dependency on CBDebugLib
+isn't very strong: it can be eliminated by modifying the make file so that
+the macro USE_CBDEBUG is no longer predefined. CBPseudoLib is required for
+Debug builds irrespective of whether USE_CBDEBUG is predefined, because such
+builds use its pseudo-kernel functions to simulate failures.
 
   Two make files are supplied:
 

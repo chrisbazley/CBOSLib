@@ -29,13 +29,12 @@ if(USE_OPTIONAL)
 endif()
 
 if(USE_FORTIFY)
-    FetchContent_Declare(Fortify
-        GIT_REPOSITORY https://github.com/chrisbazley/Fortify.git
+    FetchContent_Declare(CBPseudo
+        GIT_REPOSITORY https://github.com/chrisbazley/CBPseudoLib.git
         GIT_TAG main
     )
 
-    FetchContent_MakeAvailable(Fortify)
-    link_libraries(Fortify)
+    FetchContent_MakeAvailable(CBPseudo)
 endif()
 
 set(CMAKE_C_STANDARD 99)
@@ -100,6 +99,10 @@ target_link_libraries(CBOS
     PRIVATE
         CBUtil
 )
+
+if(USE_FORTIFY)
+    target_link_libraries(CBOS PRIVATE CBPseudo)
+endif()
 
 install(TARGETS CBOS
     ARCHIVE DESTINATION lib
