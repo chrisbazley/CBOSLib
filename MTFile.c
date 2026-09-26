@@ -28,6 +28,7 @@
   CJB: 22-May-26: Ensure only void * is converted to intptr_t.
   CJB: 21-Sep-26: Declare variables when they are first assigned.
   CJB: 21-Sep-26: Declare SWI registers with initialisers.
+  CJB: 26-Sep-26: Mark the optional file-info outputs as _Optional.
 */
 
 /* ISO library headers */
@@ -47,9 +48,9 @@
 /* ----------------------------------------------------------------------- */
 /*                         Public functions                                */
 
-_Optional _kernel_oserror *messagetrans_file_info(const char   *filename,
-                                        unsigned int *flags,
-                                        size_t       *buff_size)
+_Optional _kernel_oserror *messagetrans_file_info(const char          *filename,
+                                        _Optional unsigned int *flags,
+                                        _Optional size_t       *buff_size)
 {
   assert(filename != NULL);
 

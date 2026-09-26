@@ -29,6 +29,7 @@ History:
   CJB: 11-Dec-20: Remove redundant uses of the 'extern' keyword.
   CJB: 29-Aug-22: Use size_t rather than unsigned int for nparam.
   CJB: 07-May-25: Dogfooding the _Optional qualifier.
+  CJB: 26-Sep-26: Mark the optional file-info outputs as _Optional.
 */
 
 #ifndef MessTrans_h
@@ -49,9 +50,9 @@ History:
 /* Flags output by the messagetrans_file_info function */
 #define MessageTrans_FileInfo_HeldInMemory (1u << 0)
 
-_Optional _kernel_oserror *messagetrans_file_info(const char   */*filename*/,
-                                        unsigned int */*flags*/,
-                                        size_t       */*buff_size*/);
+_Optional _kernel_oserror *messagetrans_file_info(const char          */*filename*/,
+                                        _Optional unsigned int */*flags*/,
+                                        _Optional size_t       */*buff_size*/);
    /*
     * Gives information about the messages file specified by 'filename'. Unless
     * 'flags' is a null pointer, a flags value will be written to the integer
