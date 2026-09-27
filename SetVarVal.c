@@ -19,6 +19,7 @@
 
 /* History:
   CJB: 21-Sep-26: Created this source file.
+  CJB: 27-Sep-26: Narrow the value pointer after checking it for null.
 */
 
 /* ISO library headers */
@@ -51,7 +52,7 @@ _Optional _kernel_oserror *os_set_var_val(const char *name,
   intptr_t length = -1;
   if (value != NULL)
   {
-    size_t const size = strlen(value);
+    size_t const size = strlen(&*value);
     assert(size <= INTPTR_MAX);
     length = (intptr_t)size;
   }
