@@ -142,7 +142,7 @@ _Optional _kernel_oserror *colourtrans_generate_table(
   regs.r[4] = 0; /* return required buffer size */
   regs.r[5] = flags;
   regs.r[6] = (intptr_t)(void *)block->workspace;
-  regs.r[7] = (intptr_t)(void *)block->transfer;
+  regs.r[7] = (intptr_t)block->transfer;
   DEBUGF("ClrTrans: Calling ColourTrans_GenerateTable with "
          "0x%" PRIxPTR ",0x%" PRIxPTR ",0x%" PRIxPTR ",0x%" PRIxPTR
          ",0x%" PRIxPTR ",0x%" PRIxPTR ",0x%" PRIxPTR ",0x%" PRIxPTR "\n",

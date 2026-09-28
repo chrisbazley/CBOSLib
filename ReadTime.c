@@ -20,6 +20,8 @@
 /* History:
   CJB: 14-Mar-19: Created this source file.
   CJB: 07-May-25: Dogfooding the _Optional qualifier.
+  CJB: 28-Sep-26: Preserve the existing timer conversion pending a defined
+                  64-bit host representation.
  */
 
 /* Acorn C/C++ library headers */
@@ -45,7 +47,16 @@ _Optional _kernel_oserror *os_read_monotonic_time(int *const time)
   }
   else
   {
+    /* The 64-bit host SWI's representation of this timer has not been
+       specified; retain the existing int interface and conversion. */
+#ifdef _MSC_VER
+#pragma warning(push)
+#pragma warning(disable:4244)
+#endif
     *time = regs.r[0];
+#ifdef _MSC_VER
+#pragma warning(pop)
+#endif
     DEBUGF("ReadTime: current timer value is %d\n", *time);
   }
   return e;
