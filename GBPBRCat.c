@@ -30,6 +30,7 @@
                   More explicit conversions checked by assertions.
   CJB: 02-Aug-26: Stop assigning a maybe-null pointer to the dataptr
                   member of _kernel_osgbpb_block.
+  CJB: 28-Sep-26: Preserve pointer-sized directory handles on host builds.
  */
 
 /* ISO library headers */
@@ -93,7 +94,8 @@ os_gbpb_read_cat_no_path(const char *f, _Optional void *buffer,
 
   /* Disgusting type-cast from string pointer to integer (thanks, Acorn).
      Note that _kernel_osgbpb even updates 'gbpb_params' on error. */
-  if (_kernel_osgbpb(OS_GBPB_ReadEntriesAndFileInfoFromDir, (uintptr_t)f,
+  if (_kernel_osgbpb(OS_GBPB_ReadEntriesAndFileInfoFromDir,
+                     (uintptr_t)(const void *)f,
                      &gbpb_params) == _kernel_ERROR)
   {
     e = _kernel_last_oserror();
