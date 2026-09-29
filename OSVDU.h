@@ -37,6 +37,7 @@ History:
                   PlotOp values to avoid compiler warnings.
   CJB: 06-Aug-26: Add missing _Optional qualifiers to the types of the
                   output parameters of os_read_mode_variable.
+  CJB: 29-Sep-26: Document the VDUVar constants for reading mode variables.
 */
 
 #ifndef OSVDU_h
@@ -259,9 +260,9 @@ _Optional _kernel_oserror *os_read_vdu_variables(const VDUVar /*vars*/[],
                                                  intptr_t     /*values*/[]);
    /*
     * Reads information about the current state of the VDU drivers. The first
-    * argument should point to an array of VDU or mode variable numbers to be
-    * read, terminated by VDUVariable_EndOfList. When reading mode variables,
-    * the initialisers for those array elements should be cast to type VDUVar.
+    * argument should point to an array of VDUVar constants, terminated by
+    * VDUVar_EndOfList. Use the corresponding VDUVar constant to read a mode
+    * variable.
     * The requested variable values will be written to the integer array
     * specified by the second argument.
     * Returns: a pointer to an OS error block, or else NULL for success.
