@@ -89,7 +89,7 @@ os_gbpb_read_cat_no_path(const char *f, _Optional void *buffer,
     .nbytes = (intptr_t)*n,
     .fileptr = *pos,
     .buf_len = (intptr_t)buff_size,
-    .wild_fld = pattern ? (char *)pattern : 0, /* may be null */
+    .wild_fld = pattern ? (char *)pattern : "*",
   };
 
   /* Disgusting type-cast from string pointer to integer (thanks, Acorn).
