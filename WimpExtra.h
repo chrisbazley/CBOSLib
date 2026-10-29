@@ -32,6 +32,7 @@ History:
                   for compatibility with newer "wimp.h".
   CJB: 30-Oct-21: Added declarations of wimp_drag_box2 and wimp_auto_scroll.
   CJB: 07-May-25: Dogfooding the _Optional qualifier.
+  CJB: 29-Oct-26: Permit unused workspace pointers for default auto-scroll handlers.
 */
 
 #ifndef WimpExtra_h
@@ -153,7 +154,7 @@ typedef struct
   BBox  pause_zones;
   int   pause_time;
   int   state_change_handler;
-  void *workspace;
+  _Optional void *workspace;
 }
 WimpAutoScrollBlock;
 
