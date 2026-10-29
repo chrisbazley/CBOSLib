@@ -25,6 +25,7 @@ History:
   CJB: 02-Oct-09: Created this header file.
   CJB: 11-Dec-20: Remove redundant uses of the 'extern' keyword.
   CJB: 07-May-25: Dogfooding the _Optional qualifier.
+  CJB: 29-Oct-26: Permit absent colour-transfer callbacks and unused workspace pointers.
 */
 
 #ifndef ClrTrans_h
@@ -117,13 +118,16 @@ typedef struct
 }
 ColourTransContext;
 
+typedef PaletteEntry ColourTransTransferFn(PaletteEntry);
+
 /* Parameters for generating a colour translation table */
 typedef struct
 {
   ColourTransContext  source;
   ColourTransContext  destination; /* ColourTransContext_Sprite not supported */
-  PaletteEntry      (*transfer)(PaletteEntry);
-  void               *workspace;
+  /* Unused unless the colour-transfer function flag is set. */
+  _Optional ColourTransTransferFn *transfer;
+  _Optional void                 *workspace;
 }
 ColourTransGenerateTableBlock;
 
