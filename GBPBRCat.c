@@ -31,6 +31,8 @@
   CJB: 02-Aug-26: Stop assigning a maybe-null pointer to the dataptr
                   member of _kernel_osgbpb_block.
   CJB: 28-Sep-26: Preserve pointer-sized directory handles on host builds.
+  CJB: 28-Oct-26: Pass "*" to OS_GBPB when no wildcard pattern is supplied,
+                  avoiding a null wildcard field.
  */
 
 /* ISO library headers */
