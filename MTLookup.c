@@ -38,7 +38,6 @@
 #include <stdint.h>
 #include <stddef.h>
 #include <stdarg.h>
-#include <limits.h>
 
 /* Acorn C/C++ library headers */
 #include "kernel.h"

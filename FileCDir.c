@@ -29,7 +29,6 @@
 
 /* Acorn C/C++ library headers */
 #include "kernel.h"
-#include "swis.h"
 
 /* Local headers */
 #include "Internal/CBOSMisc.h"

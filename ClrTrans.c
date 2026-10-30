@@ -32,7 +32,6 @@
 
 /* ISO library headers */
 #include <inttypes.h>
-#include <limits.h>
 #include <stddef.h>
 
 /* Acorn C/C++ library headers */
