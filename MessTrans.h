@@ -20,8 +20,8 @@
 /* MessageTrans.h declares several functions which look up messages from tokens
    and optionally perform parameter subsitution.
 
-Dependencies: Acorn library kernel.
-Message tokens: None.
+Dependencies: Acorn library kernel and strb_t.
+Message tokens: BufOFlo.
 History:
   CJB: 06-Oct-09: Created this header file.
   CJB: 21-Oct-09: Added prototypes of new functions messagetrans_file_info,
@@ -30,6 +30,7 @@ History:
   CJB: 29-Aug-22: Use size_t rather than unsigned int for nparam.
   CJB: 07-May-25: Dogfooding the _Optional qualifier.
   CJB: 26-Sep-26: Mark the optional file-info outputs as _Optional.
+  CJB: 09-Nov-26: Added string-buffer lookup veneers.
 */
 
 #ifndef MessTrans_h
@@ -41,6 +42,8 @@ History:
 
 /* Acorn C/C++ library headers */
 #include "kernel.h"
+
+#include "strb.h"
 #include "toolbox.h"
 
 #if !defined(USE_OPTIONAL) && !defined(_Optional)
@@ -80,6 +83,25 @@ _Optional _kernel_oserror *messagetrans_close_file(MessagesFD */*mfd*/);
    /*
     * Closes the messages file associated with the messages file descriptor
     * that 'mfd' points to.
+    */
+
+_Optional _kernel_oserror *messagetrans_lookup_sb(_Optional MessagesFD *mfd,
+  const char *token, strb_t *output, size_t nparam, ...);
+   /*
+    * Looks up token as for messagetrans_lookup and writes the complete result
+    * at output's current position, respecting its editing mode. The caller
+    * controls storage allocation and may supply fixed character storage.
+    * Input strings must not refer to output's character storage.
+    * Returns BufOFlo if output cannot provide enough space. Lookup errors are
+    * returned without reporting them or writing fallback text. Output may have
+    * been modified if the second lookup fails.
+    * Returns: a pointer to an OS error block, or else NULL for success.
+    */
+
+_Optional _kernel_oserror *messagetrans_vlookup_sb(_Optional MessagesFD *mfd,
+  const char *token, strb_t *output, size_t nparam, va_list params);
+   /* As messagetrans_lookup_sb, with a va_list as for messagetrans_vlookup.
+    * Does not invoke va_end on params.
     */
 
 _Optional _kernel_oserror *messagetrans_lookup(_Optional MessagesFD   */*mfd*/,

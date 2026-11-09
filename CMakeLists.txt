@@ -133,4 +133,7 @@ if(CMAKE_SOURCE_DIR STREQUAL PROJECT_SOURCE_DIR AND
     add_executable(CanonicalTests tests/CanonicalTest.c)
     target_link_libraries(CanonicalTests PRIVATE CBOS)
     add_test(NAME CanonicalTests COMMAND CanonicalTests)
+    add_executable(LookupTests tests/LookupTest.c)
+    target_link_libraries(LookupTests PRIVATE CBOS)
+    add_test(NAME LookupTests COMMAND LookupTests)
 endif()
