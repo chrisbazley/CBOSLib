@@ -136,4 +136,7 @@ if(CMAKE_SOURCE_DIR STREQUAL PROJECT_SOURCE_DIR AND
     add_executable(LookupTests tests/LookupTest.c)
     target_link_libraries(LookupTests PRIVATE CBOS)
     add_test(NAME LookupTests COMMAND LookupTests)
+    add_executable(ToolboxTests tests/ToolboxTest.c)
+    target_link_libraries(ToolboxTests PRIVATE CBOS)
+    add_test(NAME ToolboxTests COMMAND ToolboxTests)
 endif()

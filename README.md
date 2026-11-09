@@ -13,6 +13,12 @@ platforms. It should not dynamically allocate memory itself. String-buffer venee
 caller-supplied `strb_t` objects: callers control the storage policy and can
 supply fixed storage to prevent allocation.
 
+`TboxExtra.h` declares string-buffer forms of the Button, DisplayField,
+WritableField, Menu entry text, SaveAs filename and TextArea getters. Their
+`_sb` names supplement the existing ToolboxLib functions and call through to
+that library; OptionalAcornC and the original Toolbox headers are unchanged.
+Each getter has its own archive object.
+
 Rebuilding the library
 ----------------------
   You should ensure that the standard C library, strb_t, CBDebugLib and CBPseudoLib
