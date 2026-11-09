@@ -8,4 +8,5 @@ ObjectList = OSPlot ClrTrans CTSetGCOL ReadVDUVar ReadModeV DragAnObj \
              SprOutput SprRestore SprReadInf SprSelect SetColour SetPtrBBox \
              PickFType CopyFType CountFType InFType ComFType \
              WDragBox2 WAutoScr SprPlotQ SprPlotM SprPlot SprFlipX \
-             SprFlipY SetVarVal TaskEnum
+             SprFlipY SetVarVal TaskEnum \
+             ButtonGSB DispGetSB WritGetSB MenuGetSB SaveAsGSB TextGetSB
