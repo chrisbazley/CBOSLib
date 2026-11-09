@@ -9,11 +9,13 @@ Introduction
 functionality not provided by the Wimp and Toolbox libraries supplied with
 Acorn C/C++. It should have minimal dependencies on other libraries and
 must not include any code or interfaces that could be useful on other
-platforms. It should not dynamically allocate memory.
+platforms. It should not dynamically allocate memory itself. String-buffer veneers use
+caller-supplied `strb_t` objects: callers control the storage policy and can
+supply fixed storage to prevent allocation.
 
 Rebuilding the library
 ----------------------
-  You should ensure that the standard C library, CBDebugLib and CBPseudoLib
+  You should ensure that the standard C library, strb_t, CBDebugLib and CBPseudoLib
 (by the same author as CBOSLib) are on your C$Path, otherwise the compiler
 won't be able to find the required header files. The dependency on CBDebugLib
 isn't very strong: it can be eliminated by modifying the make file so that

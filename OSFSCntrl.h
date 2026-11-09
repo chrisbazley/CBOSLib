@@ -18,14 +18,15 @@
  */
 
 /*
-Dependencies: Acorn library kernel.
-Message tokens: None.
+Dependencies: Acorn library kernel and strb_t.
+Message tokens: BufOFlo.
 History:
   CJB: 12-Oct-09: Created this header file.
   CJB: 14-Mar-19: Added the os_fscontrol_copy function.
   CJB: 11-Dec-20: Remove redundant uses of the 'extern' keyword.
   CJB: 07-May-25: Dogfooding the _Optional qualifier.
   CJB: 21-Sep-26: Added the os_fscontrol_wipe function.
+  CJB: 09-Nov-26: Added os_fscontrol_canonicalise_sb.
 */
 
 #ifndef OSFSCntrl_h
@@ -36,6 +37,8 @@ History:
 
 /* Acorn C/C++ library headers */
 #include "kernel.h"
+
+#include "strb.h"
 
 #if !defined(USE_OPTIONAL) && !defined(_Optional)
 #define _Optional
@@ -57,6 +60,20 @@ _Optional _kernel_oserror *os_fscontrol_canonicalise(
     * does not exist. Unless 'nbytes' is a null pointer, the integer to which
     * it points will be set to the number of bytes that would have been output
     * had a large enough buffer been provided.
+    * Returns: a pointer to an OS error block, or else NULL for success.
+    */
+
+_Optional _kernel_oserror *os_fscontrol_canonicalise_sb(strb_t * /*buffer*/,
+  _Optional const char * /*pv*/, _Optional const char * /*ps*/, const char * /*f*/);
+   /*
+    * Writes the canonicalised path at the current position in buffer, respecting
+    * its editing mode. pv, ps and f have the same meanings as for
+    * os_fscontrol_canonicalise.
+    * The input strings must not refer to buffer's character storage.
+    * Returns BufOFlo if the string buffer cannot provide enough space,
+    * irrespective of whether it uses fixed or allocated character storage.
+    * Failure to measure the path or obtain storage leaves the contents and
+    * position unchanged. A failure while writing may modify the contents.
     * Returns: a pointer to an OS error block, or else NULL for success.
     */
 
