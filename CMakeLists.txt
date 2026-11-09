@@ -11,6 +11,10 @@ include(FetchContent)
 FetchContent_Declare(OptionalAcornC GIT_REPOSITORY https://github.com/chrisbazley/OptionalAcornC.git GIT_TAG main)
 FetchContent_Declare(CBUtil GIT_REPOSITORY https://github.com/chrisbazley/CBUtilLib.git GIT_TAG main)
 
+FetchContent_Declare(strb GIT_REPOSITORY https://github.com/chrisbazley/strb_t.git
+    GIT_TAG 848cb11b419c73016fe63f199b7b840ea2ba0220)
+
+FetchContent_MakeAvailable(strb)
 FetchContent_MakeAvailable(OptionalAcornC)
 FetchContent_MakeAvailable(CBUtil)
 
@@ -105,6 +109,7 @@ target_compile_definitions(CBOS PRIVATE
 # Header files depend on definitions from these dependencies
 target_link_libraries(CBOS PUBLIC
     OptionalAcornC
+    strb
 )
 
 target_link_libraries(CBOS
@@ -120,3 +125,12 @@ install(TARGETS CBOS
     ARCHIVE DESTINATION lib
     PUBLIC_HEADER DESTINATION include
 )
+
+if(CMAKE_SOURCE_DIR STREQUAL PROJECT_SOURCE_DIR AND
+   CMAKE_SYSTEM_NAME STREQUAL "Linux" AND NOT USE_OPTIONAL AND
+   CMAKE_C_COMPILER_ID MATCHES "GNU|Clang")
+    enable_testing()
+    add_executable(CanonicalTests tests/CanonicalTest.c)
+    target_link_libraries(CanonicalTests PRIVATE CBOS)
+    add_test(NAME CanonicalTests COMMAND CanonicalTests)
+endif()
