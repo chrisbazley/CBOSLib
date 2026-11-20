@@ -12,7 +12,7 @@ FetchContent_Declare(OptionalAcornC GIT_REPOSITORY https://github.com/chrisbazle
 FetchContent_Declare(CBUtil GIT_REPOSITORY https://github.com/chrisbazley/CBUtilLib.git GIT_TAG main)
 
 FetchContent_Declare(strb GIT_REPOSITORY https://github.com/chrisbazley/strb_t.git
-    GIT_TAG fbc331ddc4a53b666e771787711a8e7afb24a3cf)
+    GIT_TAG main)
 
 FetchContent_MakeAvailable(strb)
 FetchContent_MakeAvailable(OptionalAcornC)
